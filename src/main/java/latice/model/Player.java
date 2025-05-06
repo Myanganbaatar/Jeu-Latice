@@ -37,5 +37,15 @@ public class Player {
         rack.display();
     }
 
-    
+    public Rack getRack() {
+        return rack;
+    }
+
+    public int getPoolSize() {
+        return pool.size();
+    }
+
+    public boolean hasTilesInPool() {
+        return !pool.isEmpty();
+    }
 }
