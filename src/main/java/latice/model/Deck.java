@@ -21,15 +21,4 @@ public class Deck {
         }
     }
 
-    public void shuffle() {
-        Collections.shuffle(tiles);
-    }
-
-    public Tile drawTile() {
-        return tiles.isEmpty() ? null : tiles.remove(0);
-    }
-
-    public int getTotalTiles() {
-        return tiles.size();
-    }
 }
