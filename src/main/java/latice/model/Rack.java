@@ -36,5 +36,13 @@ public class Rack {
         }
     }
 
+    public boolean isFull() {
+        return tiles.size() >= capacity;
+    }
+
+    public boolean isEmpty() {
+        return tiles.isEmpty();
+    }
+
     
 }
