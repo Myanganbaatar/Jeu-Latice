@@ -8,4 +8,9 @@ public class Tile {
         this.color = color;
         this.shape = shape;
     }
+
+    @Override
+    public String toString() {
+        return "Tuile: " + color + " - " + shape;
+    }
 }
