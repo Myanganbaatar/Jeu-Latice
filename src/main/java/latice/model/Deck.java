@@ -32,4 +32,10 @@ public class Deck {
     public int getTotalTiles() {
         return tiles.size();
     }
+    
+    public List<Tile> getTiles() {
+        return new ArrayList<>(tiles);  // Return a copy
+    }
+    
+    
 }
