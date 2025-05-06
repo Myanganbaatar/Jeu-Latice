@@ -20,5 +20,22 @@ public class Player {
         return name;
     }
 
- 
+    public void addToPool(Tile tile) {
+        if (tile != null) {
+            pool.add(tile);
+        }
+    }
+
+    public void initializeRack() {
+        while (!pool.isEmpty() && !rack.isFull()) {
+            rack.addTile(pool.remove(0));
+        }
+    }
+
+    public void displayRack() {
+        System.out.println("Rack de " + name + ":");
+        rack.display();
+    }
+
+    
 }
