@@ -45,5 +45,14 @@ public class Game {
         }
     }
 
-    
+    public void displayPlayersRacks() {
+        for (Player player : players) {
+            player.displayRack();
+            System.out.println();
+        }
+    }
+
+    public List<Player> getPlayers() {
+        return new ArrayList<>(players); // cette ligne est important pour protéger l'encapsulation de l'atribut players
+    }
 }
