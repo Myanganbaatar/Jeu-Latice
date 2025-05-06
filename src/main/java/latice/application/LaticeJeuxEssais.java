@@ -1,7 +1,10 @@
 package latice.application;
 
-import latice.game.Game;
-import latice.game.Player;
+import latice.model.Game;
+import latice.model.Player;
+
+import java.util.List;
+
 import latice.model.Color;
 import latice.model.Deck;
 import latice.model.Shape;
@@ -9,6 +12,28 @@ import latice.model.Tile;
 
 public class LaticeJeuxEssais {
     public static void main(String[] args) {
+    	
+    	
+    	
+    	
+    	
+        Deck deck = new Deck();
+        
+        
+        System.out.println("=== All Tiles in Deck ===");
+        System.out.println("Total tiles: " + deck.getTotalTiles() + "\n");
+        
+        displayTiles(deck.getTiles());  
+        
+        
+        deck.shuffle();
+        System.out.println("\n=== Shuffled Tiles ===");
+        displayTiles(deck.getTiles());  
+        
+
+   
+        
+        
         System.out.println("=== Jeux d'essais pour la Version 1 ===");
         testDeckCreation();
         testTileDistribution();
@@ -34,5 +59,13 @@ public class LaticeJeuxEssais {
         player.addToPool(new Tile(Color.RED, Shape.FLOWER));
         player.addToPool(new Tile(Color.GREEN, Shape.BIRD));
         player.displayRack();
+    }
+    
+    
+    private static void displayTiles(List<Tile> tiles) {
+        int counter = 1;
+        for (Tile tile : tiles) {
+            System.out.printf("%2d: %s%n", counter++, tile);
+        }
     }
 }
