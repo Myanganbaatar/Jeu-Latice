@@ -44,5 +44,11 @@ public class Rack {
         return tiles.isEmpty();
     }
 
-    
+    public int size() {
+        return tiles.size();
+    }
+
+    public List<Tile> getTiles() {
+        return new ArrayList<>(tiles); 
+    }
 }
