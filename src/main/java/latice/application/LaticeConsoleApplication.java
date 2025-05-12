@@ -1,6 +1,7 @@
 package latice.application;
 
-import latice.game.Game;
+import latice.Board.Board;
+import latice.model.Game;
 
 public class LaticeConsoleApplication {
     public static void main(String[] args) {
@@ -12,5 +13,11 @@ public class LaticeConsoleApplication {
 
         System.out.println("État initial des joueurs:");
         game.displayPlayersRacks();
+        
+        
+       Board board = new Board(9);
+       board.displayBoard();
+        
+        
     }
 }
