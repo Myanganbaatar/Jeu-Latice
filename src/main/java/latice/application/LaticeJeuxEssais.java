@@ -23,12 +23,12 @@ public class LaticeJeuxEssais {
         System.out.println("=== All Tiles in Deck ===");
         System.out.println("Total tiles: " + deck.getTotalTiles() + "\n");
         
-        displayTiles(deck.getTiles());  
+        displayTiles(deck.getAllTiles());  
         
         
         deck.shuffle();
         System.out.println("\n=== Shuffled Tiles ===");
-        displayTiles(deck.getTiles());  
+        displayTiles(deck.getAllTiles());  
         
 
    

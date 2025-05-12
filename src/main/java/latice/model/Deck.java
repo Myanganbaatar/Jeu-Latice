@@ -32,10 +32,28 @@ public class Deck {
     public int getTotalTiles() {
         return tiles.size();
     }
-    
-    public List<Tile> getTiles() {
-        return new ArrayList<>(tiles);  // Return a copy
+
+    public void displayAllTiles() {
+        System.out.println("\n=== ALL GAME TILES ===");
+        System.out.println("Total: " + tiles.size() + " tiles");
+
+        // Par couleur
+        for (Color color : Color.values()) {
+            System.out.println("\n--- Color " + color + " ---");
+
+            // Par forme
+            for (Shape shape : Shape.values()) {
+                long count = tiles.stream()
+                    .filter(t -> t.getColor() == color && t.getShape() == shape)
+                    .count();
+
+                System.out.println(shape + ": " + count + "copies");
+            }
+        }
     }
-    
-    
+
+    public List<Tile> getAllTiles() {
+        return new ArrayList<>(tiles); 
+    }
+
 }
