@@ -34,8 +34,41 @@ public class Board {
         // Case Lune
         grid[4][4] = new BoardCase(CaseType.LUNE);
     }
-
-
     
+    
+
+
+    public void displayBoard() {
+        System.out.println("=== Plateau de jeu ===\n");
+
+        for (int j = 0; j < size; j++) {
+            System.out.print("----");
+        }
+        System.out.println("-");
+
+        for (int i = 0; i < size; i++) {
+            // Ligne de contenu
+            for (int j = 0; j < size; j++) {
+                String content = switch (grid[i][j].getType()) {
+                    case NORMAL -> " ";
+                    case SOLEIL -> "S";
+                    case LUNE -> "L";
+                };
+                System.out.print("| " + content + " ");
+            }
+            System.out.println("|");
+
+            // Ligne de séparation
+            for (int j = 0; j < size; j++) {
+                System.out.print("----");
+            }
+            System.out.println("-");
+        }
+    }
+    
+    public BoardCase getCase(int row, int col) {
+        return grid[row][col];
+    }
+
 
 }
