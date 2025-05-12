@@ -11,11 +11,5 @@ public class BoardCase {
         return type;
     }
 
-    public char displaySymbol() {
-        return switch (type) {
-            case NORMAL -> '.';
-            case SOLEIL -> 'S';
-            case LUNE -> 'L';
-        };
-    }
+   
 }
