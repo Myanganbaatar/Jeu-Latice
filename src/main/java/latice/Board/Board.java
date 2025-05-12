@@ -18,7 +18,7 @@ public class Board {
         }
 
         // Cases Soleil
-        int[][] soleilCoords = {
+        int[][] sunCoords = {
             {0,0}, {0,4}, {0,8},
             {1,1}, {1,7},
             {2,2}, {2,6},
@@ -27,12 +27,12 @@ public class Board {
             {7,1}, {7,7},
             {8,0}, {8,4}, {8,8}
         };
-        for (int[] pos : soleilCoords) {
-            grid[pos[0]][pos[1]] = new BoardCase(CaseType.SOLEIL);
+        for (int[] pos : sunCoords) {
+            grid[pos[0]][pos[1]] = new BoardCase(CaseType.SUN);
         }
 
         // Case Lune
-        grid[4][4] = new BoardCase(CaseType.LUNE);
+        grid[4][4] = new BoardCase(CaseType.MOON);
     }
     
     
@@ -51,8 +51,8 @@ public class Board {
             for (int j = 0; j < size; j++) {
                 String content = switch (grid[i][j].getType()) {
                     case NORMAL -> " ";
-                    case SOLEIL -> "S";
-                    case LUNE -> "L";
+                    case SUN -> "S";
+                    case MOON -> "M";
                 };
                 System.out.print("| " + content + " ");
             }
@@ -68,6 +68,11 @@ public class Board {
     
     public BoardCase getCase(int row, int col) {
         return grid[row][col];
+    }
+    
+    
+    public boolean isSunCase(int row, int col) {
+        return getCase(row, col).getType() == CaseType.SUN;
     }
 
 
