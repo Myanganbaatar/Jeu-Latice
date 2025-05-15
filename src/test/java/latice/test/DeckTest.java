@@ -2,6 +2,7 @@ package latice.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 
@@ -56,6 +57,14 @@ public class DeckTest {
 	        }
 	    }
 	}
+	
+	@Test
+    void testDrawTileReducesDeckSize() {
+        int initialSize = deck.getTotalTiles();
+        Tile drawn = deck.drawTile();
+        assertNotNull(drawn, "La tuile piochée ne devrait pas être null");
+        assertEquals(initialSize - 1, deck.getTotalTiles(), "Le nombre de tuiles devrait diminuer de 1 après un tirage");
+    }
 	
 }
 

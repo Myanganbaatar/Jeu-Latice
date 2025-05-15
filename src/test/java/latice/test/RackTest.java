@@ -1,6 +1,8 @@
 package latice.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +28,24 @@ public class RackTest {
     void testAddTileIncreasesSize() {
         rack.addTile(tile1);
         assertEquals(1, rack.size());
+    }
+    
+    @Test
+    void testAddTileUpToCapacity() {
+        for (int i = 0; i < 5; i++) {
+            rack.addTile(new Tile(Color.values()[i], Shape.FEATHER));
+        }
+        assertEquals(5, rack.size());
+        rack.addTile(tile1);  // should not be added
+        assertEquals(5, rack.size(), "Rack should not exceed capacity of 5 tiles");
+    }
+    
+    
+    @Test
+    void testIsEmpty() {
+        assertTrue(rack.isEmpty());
+        rack.addTile(tile1);
+        assertFalse(rack.isEmpty());
     }
 
 }
