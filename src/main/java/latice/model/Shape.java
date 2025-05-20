@@ -1,6 +1,23 @@
 package latice.model;
 
-public enum Shape {
-    FEATHER, BIRD, TURTLE, FLOWER, GECKO, DOLPHIN;
-}
 
+
+public enum Shape {
+
+        FEATHER("🪶"),
+        BIRD("🕊️"),
+        TURTLE("🐢"),
+        FLOWER("🌸"),
+        GECKO("🦎"),
+        DOLPHIN("🐬");
+
+        private final String symbol;
+
+        Shape(String symbol) {
+            this.symbol = symbol;
+        }
+
+        public String getSymbol() {
+            return symbol;
+        }
+}

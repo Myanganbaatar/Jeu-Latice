@@ -1,8 +1,8 @@
 package latice.model;
 
 public class Tile {
-    private Color color;
-    private Shape shape;
+    private final Color color;
+    private final Shape shape;
 
     public Tile(Color color, Shape shape) {
         this.color = color;
@@ -11,6 +11,16 @@ public class Tile {
 
     @Override
     public String toString() {
-        return "Tuile: " + color + " - " + shape;
+        return color.getAnsiCode() + shape.getSymbol() + " (" + shape + ")" + ANSI_RESET;
+    }
+
+    private static final String ANSI_RESET = "\u001B[0m";
+
+    public Color getColor() {
+        return color;
+    }
+
+    public Shape getShape() {
+        return shape;
     }
 }
