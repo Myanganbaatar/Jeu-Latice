@@ -39,6 +39,15 @@ public class RackView {
             tilePane.setPrefSize(TILE_SIZE, TILE_SIZE);
 
             allTilePanes.add(tilePane);
+
+            tilePane.setOnMouseClicked(e -> {
+                // Reset all
+                for (StackPane pane : allTilePanes) {
+                    pane.setStyle("-fx-border-color: black; -fx-background-color: white;");
+                }
+                tilePane.setStyle("-fx-border-color: red; -fx-border-width: 3; -fx-background-color: white;");
+            });
+
             rackBox.getChildren().add(tilePane);
         }
     }
