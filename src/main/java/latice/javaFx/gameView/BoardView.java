@@ -13,6 +13,12 @@ public class BoardView {
     private final GridPane grid = new GridPane();
     private final int TILE_SIZE = 70;
 
+    public interface TilePlaceHandler {
+        void onPlace(int row, int col, StackPane cell);
+    }
+
+    private TilePlaceHandler handler;
+
     public BoardView(Board board) {
         grid.setAlignment(Pos.CENTER);
 
@@ -41,9 +47,21 @@ public class BoardView {
                 cell.setPrefSize(TILE_SIZE, TILE_SIZE);
                 cell.setStyle("-fx-border-color: black;");
 
+                int finalRow = row;
+                int finalCol = col;
+                cell.setOnMouseClicked(e -> {
+                    if (handler != null) {
+                        handler.onPlace(finalRow, finalCol, cell);
+                    }
+                });
+
                 grid.add(cell, col, row);
             }
         }
+    }
+
+    public void setOnTilePlace(TilePlaceHandler handler) {
+        this.handler = handler;
     }
 
     public GridPane getGrid() {
