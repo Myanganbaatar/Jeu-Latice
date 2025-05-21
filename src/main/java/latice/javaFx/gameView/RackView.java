@@ -15,6 +15,12 @@ public class RackView {
     private final int TILE_SIZE = 70;
     private final List<StackPane> allTilePanes = new ArrayList<>();
 
+    public interface TileSelectHandler {
+        void onSelect(Tile tile, StackPane tilePane);
+    }
+
+    private TileSelectHandler handler;
+
     public RackView(List<Tile> tiles) {
         rackBox.setAlignment(Pos.CENTER);
 
@@ -46,10 +52,18 @@ public class RackView {
                     pane.setStyle("-fx-border-color: black; -fx-background-color: white;");
                 }
                 tilePane.setStyle("-fx-border-color: red; -fx-border-width: 3; -fx-background-color: white;");
+
+                if (handler != null) {
+                    handler.onSelect(tile, tilePane);
+                }
             });
 
             rackBox.getChildren().add(tilePane);
         }
+    }
+
+    public void setOnTileSelect(TileSelectHandler handler) {
+        this.handler = handler;
     }
 
     public HBox getBox() {
