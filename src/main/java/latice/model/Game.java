@@ -63,6 +63,9 @@ public class Game {
         int randomIndex = new Random().nextInt(players.size());
         currentPlayer = players.get(randomIndex);
     }
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
     
     
 }
