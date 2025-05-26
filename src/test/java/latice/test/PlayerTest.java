@@ -21,13 +21,13 @@ public class PlayerTest {
     }
 
     @Test
-    void testGetName() {
+    void test_Get_Name() {
         assertEquals("Alice", player.getName());
     }
     
     
     @Test
-    void testAddTileToPoolAndInitializeRack() {
+    void test_Add_Tile_To_Pool_And_Initialize_Rack() {
         Tile tile1 = new Tile(Color.RED, Shape.BIRD);
         Tile tile2 = new Tile(Color.MAGENTA, Shape.DOLPHIN);
 
@@ -43,7 +43,7 @@ public class PlayerTest {
     }
     
     @Test
-    void testHasTilesInPool() {
+    void test_Has_Tiles_In_Pool() {
         assertFalse(player.hasTilesInPool());
 
         player.addToPool(new Tile(Color.GREEN,Shape.FLOWER));
@@ -51,7 +51,7 @@ public class PlayerTest {
     }
     
     @Test
-    void testInitializeRackFillsUpToFive() {
+    void test_Initialize_Rack_Fills_Up_To_Five() {
         for (int i = 0; i < 7; i++) {
             player.addToPool(new Tile(Color.GREEN,Shape.GECKO));
         }
@@ -63,7 +63,7 @@ public class PlayerTest {
     }
     
     @Test
-    void testInitializeRackDoesNotOverfill() {
+    void test_Initialize_Rack_Does_No_Over_fill() {
         for (int i = 0; i < 3; i++) {
             player.addToPool(new Tile(Color.GREEN,Shape.GECKO));
         }
@@ -75,7 +75,7 @@ public class PlayerTest {
     }
     
     @Test
-    void testDisplayRack() {
+    void test_Display_Rack() {
         
         player.displayRack();
     }
