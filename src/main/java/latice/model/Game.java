@@ -32,6 +32,8 @@ public class Game {
         for (Player player : players) {
             player.initializeRack();
         }
+        
+        selectRandomStartingPlayer();
     }
 
     private void distributeTiles() {

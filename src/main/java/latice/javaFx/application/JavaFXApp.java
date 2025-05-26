@@ -1,5 +1,4 @@
 package latice.javaFx.application;
-
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,21 +9,6 @@ import latice.Board.Board;
 import latice.javaFx.gameView.BoardView;
 import latice.javaFx.gameView.RackView;
 import latice.model.Game;
-import latice.model.Tile;
-
-import java.util.List;
-import java.util.Random;
-
-package latice.iface;
-
-import javafx.application.Application;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.*;
-import javafx.stage.Stage;
-import latice.board.Board;
-import latice.game.Game;
 import latice.model.Tile;
 
 import java.util.List;
