@@ -4,10 +4,13 @@ import latice.model.Deck;
 import latice.model.Tile;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Game {
     private final List<Player> players;
     private final Deck deck;
+    private Player currentPlayer;
+    
 
     public Game() {
         this.players = new ArrayList<>();
@@ -55,4 +58,11 @@ public class Game {
     public List<Player> getPlayers() {
         return new ArrayList<>(players); // cette ligne est important pour protéger l'encapsulation de l'atribut players
     }
+    
+    private void selectRandomStartingPlayer() {
+        int randomIndex = new Random().nextInt(players.size());
+        currentPlayer = players.get(randomIndex);
+    }
+    
+    
 }
