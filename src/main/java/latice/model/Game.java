@@ -68,6 +68,10 @@ public class Game {
     public Tile drawTile() {
         return deck.drawTile();
     }
+    
+    public boolean isDeckEmpty() {
+        return deck.getTotalTiles() == 0;
+    }
 
     
 }
