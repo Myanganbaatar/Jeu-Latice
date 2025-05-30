@@ -5,21 +5,26 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.List;
+import java.util.Scanner;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import latice.Board.Board;
 import latice.model.Game;
 import latice.model.Player;
 import latice.model.Tile;
+import latice.rules.Referee;
 
 public class GameTest {
 
     Game game;
-
+    Referee referee;
     @BeforeEach
     void setUp() {
         game = new Game();
+        game.initializeGame();
+        referee = new Referee();
     }
 
     @Test
@@ -65,6 +70,52 @@ public class GameTest {
         assertFalse(game.isDeckEmpty());
        
     }
+    
+    @Test
+    void testAnnounceWinnerDetectsCorrectWinner() throws Exception {
+        List<Player> players = game.getPlayers();
 
+        
+        Player player1 = players.get(0);
+        Player player2 = players.get(1);
+
+        player1.addScore(20);
+        player2.addScore(10);
+
+       
+        var method = Game.class.getDeclaredMethod("announceWinner", List.class, Referee.class);
+        method.setAccessible(true);
+
+        System.out.println("\n🔍 Testing announceWinner...");
+        method.invoke(game, players, referee);  
+
+        assertEquals(player1, referee.getWinner(players));
+    }
+    
+    @Test
+    void testAnnounceWinnerWithDraw() throws Exception {
+        List<Player> players = game.getPlayers();
+
+        Player player1 = players.get(0);
+        Player player2 = players.get(1);
+
+        player1.addScore(15);
+        player2.addScore(15);
+
+        var method = Game.class.getDeclaredMethod("announceWinner", List.class, Referee.class);
+        method.setAccessible(true);
+
+        System.out.println("\n🔍 Testing announceWinner (draw)...");
+        method.invoke(game, players, referee);  // Should print DRAW
+
+        assertNull(referee.getWinner(players));
+    }
+    
+    @Test
+    public void testAskReplayYes() {
+        Scanner scanner = new Scanner("y");
+        Game game = new Game();
+        assertTrue(game.askReplay(scanner));
+    }
   
 }
