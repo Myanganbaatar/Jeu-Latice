@@ -80,7 +80,7 @@ class BoardTest {
         Tile tile = new Tile(Color.RED, Shape.DOLPHIN);
         board.placeTile(0, 0, tile);
 
-        // Capture system output
+        
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         PrintStream originalOut = System.out;
         System.setOut(new PrintStream(outContent));
