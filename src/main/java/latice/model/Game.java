@@ -96,6 +96,20 @@ public class Game {
 
         scanner.close();
     }
+    
+    private void announceWinner(List<Player> players, Referee referee) {
+        System.out.println("\n=== Final result ===");
+        for (Player p : players) {
+            System.out.println(p.getName() + " - Score : " + p.getScore() + " - Tiles placed : " + p.getTilesPlaced());
+        }
+
+        Player winner = referee.getWinner(players);
+        if (winner == null) {
+            System.out.println("\nDRAW !");
+        } else {
+            System.out.println("\n🏆 WINNER: " + winner.getName() + " 🏆");
+        }
+    }
 
     
 }
