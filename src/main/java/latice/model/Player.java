@@ -117,14 +117,30 @@ public class Player {
     }
     
     
-    public void playTurn(Board board, Referee referee, Scanner scanner, boolean isFirstMove) {
-        System.out.println("\n🎲 Joueur actuel : " + name);
-        displayRack();
-        board.displayBoard();
+    public boolean playTurn(Board board, Referee referee, Scanner scanner, boolean isFirstMove, Game game) {
+        System.out.println("Current cycle info can be handled in Game if needed.");
 
+        System.out.println("\n" + name + "'s rack:");
+        rack.display();
+
+        int action = 0;
+        while (action != 1 && action != 2) {
+            System.out.print("\n💡 Action (1=Play a tile | 2=Pass your turn): ");
+            action = scanner.nextInt();
+            if (action != 1 && action != 2) {
+                System.out.println("⛔ Invalid action. Please try again!");
+            }
+        }
+
+        if (action == 2) {
+            System.out.println("🔄 " + name + " chose to pass their turn.");
+            return false; // Turn skipped
+        }
+
+        // Play tile
         Tile tile = chooseTile(scanner);
-        int row = askCoordinate(scanner, "ligne", 9);
-        int col = askCoordinate(scanner, "colonne", 9);
+        int row = askCoordinate(scanner, "row", 9);
+        int col = askCoordinate(scanner, "column", 9);
 
         boolean validMove = referee.isPlacementValid(board, row, col, tile, isFirstMove);
 
@@ -132,16 +148,27 @@ public class Player {
             board.placeTile(row, col, tile);
             rack.removeTile(tile);
             incrementTilesPlaced();
-            System.out.println("✅ Coup valide : tuile posée.");
 
-            fillRackFromPool(); // Optionally refill rack here
-        } else {
-            System.out.println("⛔ Coup invalide : emplacement interdit selon les règles.");
-            if (isFirstMove) {
-                System.out.println("👉 Rappel : le premier coup doit être placé en ligne 5, colonne 5 !");
+            int points = referee.calculateScore(board, row, col, tile);
+            addScore(points);
+            System.out.println("✅ Valid move: tile placed. Points earned: " + points);
+
+            Tile newTile = game.drawTile();
+            if (newTile != null) {
+                rack.addTile(newTile);
+                System.out.println("🟡 New tile added to the rack.");
+            } else {
+                System.out.println("⚠️ Deck is empty, no new tile.");
             }
-            // Retry the turn
-            playTurn(board, referee, scanner, isFirstMove);
+
+            return true;
+        } else {
+            System.out.println("⛔ Invalid move: illegal placement according to the rules.");
+            if (isFirstMove) {
+                System.out.println("👉 Reminder: the first move must be at row 5, column 5!");
+            }
+            // Retry this turn
+            return playTurn(board, referee, scanner, isFirstMove, game);
         }
     }
     
