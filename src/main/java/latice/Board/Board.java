@@ -41,30 +41,25 @@ public class Board {
 
 
     public void displayBoard() {
-        System.out.println("=== Plateau de jeu ===\n");
-
-        for (int j = 0; j < size; j++) {
-            System.out.print("----");
+        System.out.print("\n    ");
+        for (int j = 1; j <= size; j++) {
+            System.out.print(j + "   ");
         }
-        System.out.println("-");
+        System.out.println();
+        System.out.println("   " + "-".repeat(size * 4 + 1));
 
         for (int i = 0; i < size; i++) {
-            // Ligne de contenu
+            System.out.print((i + 1) + " |");
             for (int j = 0; j < size; j++) {
-                String content = switch (grid[i][j].getType()) {
-                    case NORMAL -> " ";
-                    case SUN -> "S";
-                    case MOON -> "M";
-                };
-                System.out.print("| " + content + " ");
+                if (hasTile(i, j)) {
+                    Tile t = getTile(i, j);
+                    System.out.print(t.toColoredSymbol() + " |");
+                } else {
+                    System.out.print("   |");
+                }
             }
-            System.out.println("|");
-
-            // Ligne de séparation
-            for (int j = 0; j < size; j++) {
-                System.out.print("----");
-            }
-            System.out.println("-");
+            System.out.println();
+            System.out.println("   " + "-".repeat(size * 4 + 1));
         }
     }
     
