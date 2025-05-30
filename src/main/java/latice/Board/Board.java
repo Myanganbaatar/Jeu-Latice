@@ -89,5 +89,9 @@ public class Board {
     public Tile getTile(int row, int col) {
         return placedTiles[row][col];
     }
+    
+    public void placeTile(int row, int col, Tile tile) {
+        placedTiles[row][col] = tile;
+    }
 
 }
