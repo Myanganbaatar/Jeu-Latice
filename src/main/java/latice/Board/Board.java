@@ -86,5 +86,8 @@ public class Board {
         return placedTiles[row][col] != null;
     }
 
+    public Tile getTile(int row, int col) {
+        return placedTiles[row][col];
+    }
 
 }
