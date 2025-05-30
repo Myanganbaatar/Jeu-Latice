@@ -65,4 +65,9 @@ public class Game {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
     }
     
+    public Tile drawTile() {
+        return deck.drawTile();
+    }
+
+    
 }
