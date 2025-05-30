@@ -4,6 +4,7 @@ import latice.model.Rack;
 import latice.model.Tile;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Player {
     private final String name;
@@ -67,5 +68,27 @@ public class Player {
             rack.addTile(pool.remove(0));
         }
     }
+    protected Tile chooseTile(Scanner scanner) {
+        int tileIndex = -1;
+        List<Tile> tiles = rack.getTiles();
 
+        while (true) {
+            System.out.print("\nEntrez l’index de la tuile à jouer (1-" + tiles.size() + ") : ");
+            try {
+                tileIndex = scanner.nextInt() - 1;
+                if (tileIndex < 0 || tileIndex >= tiles.size()) {
+                    System.out.println("⛔ Index invalide. Veuillez réessayer !");
+                } else {
+                    break;
+                }
+            } catch (java.util.InputMismatchException e) {
+                System.out.println("⛔ Entrée invalide, veuillez entrer un nombre.");
+                scanner.nextLine();
+            }
+        }
+        return tiles.get(tileIndex);
+    }
+    
+    
+   
 }
