@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import latice.Board.Board;
 import latice.javaFx.gameView.BoardView;
 import latice.javaFx.gameView.RackView;
+import latice.javaFx.util.AlertInvalid;
 import latice.model.Game;
 import latice.model.Player;
 import latice.model.Tile;
@@ -44,7 +45,7 @@ public class JavaFXApp extends Application {
             if (selectedTile != null && targetCell.getChildren().size() == 1) {
                 boolean isValid = referee.isPlacementValid(board, row, col, selectedTile, isFirstMove);
                 if (!isValid) {
-                    System.out.println("⛔ Coup invalide selon l’arbitre.");
+                    AlertInvalid.showInvalidMoveAlert(); // 🔄 Show alert from utility
                     return;
                 }
 
