@@ -74,27 +74,62 @@ public class Game {
         return deck.getTotalTiles() == 0;
     }
     
-    public void startGame() {
-        Scanner scanner = new Scanner(System.in);
-        Player currentPlayer = getCurrentPlayer();
+    public void startGame(Scanner scanner) {
+        List<Player> players = getPlayers();
+        int currentPlayerIndex = new Random().nextInt(players.size());
+        Player currentPlayer = players.get(currentPlayerIndex);
 
-        System.out.println("\n👉 Premier coup : ligne 5, colonne 5 (centre de la lune)\n");
+        boolean isFirstMove = true;
+        int turns = 0;
+        int cycles = 0;
+
+        System.out.println("\"👉 First move: row 5, column 5 (center of the moon)\\n\"");
 
         while (true) {
-            currentPlayer.playTurn(board, referee, scanner, isFirstMove);
+            currentPlayer.displayStatus();
+            board.displayBoard();
 
-            if (isFirstMove) isFirstMove = false;
+            boolean validTurn = currentPlayer.playTurn(board, referee, scanner, isFirstMove, this);
 
-            if (currentPlayer.getRack().getTiles().isEmpty()) {
-                System.out.println("Le rack du joueur " + currentPlayer.getName() + " est vide. Fin de partie !");
+            if (validTurn && isFirstMove) {
+                isFirstMove = false;
+            }
+
+            // Count turns and cycles
+            turns++;
+            if (turns % players.size() == 0) {
+                cycles++;
+            }
+
+            if (cycles >= 10 || referee.isGameOver(board, players)) {
+                System.out.println("\n🔔 Game over! !");
+                announceWinner(players, referee);
                 break;
             }
 
-            nextPlayer();
-            currentPlayer = getCurrentPlayer();
+            currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+            currentPlayer = players.get(currentPlayerIndex);
+        }
+    }
+    
+    private void announceWinner(List<Player> players, Referee referee) {
+        System.out.println("\n=== Final result ===");
+        for (Player p : players) {
+            System.out.println(p.getName() + " - Score : " + p.getScore() + " - Tiles placed : " + p.getTilesPlaced());
         }
 
-        scanner.close();
+        Player winner = referee.getWinner(players);
+        if (winner == null) {
+            System.out.println("\nDRAW !");
+        } else {
+            System.out.println("\n🏆 WINNER: " + winner.getName() + " 🏆");
+        }
+    }
+    
+    public boolean askReplay(Scanner scanner) {
+        System.out.print("\n🔁 Do you want to play again? (y/n): ");
+        String response = scanner.next();
+        return response.equalsIgnoreCase("y");
     }
 
     
