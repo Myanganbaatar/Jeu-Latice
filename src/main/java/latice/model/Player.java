@@ -13,6 +13,7 @@ public class Player {
     private final String name;
     private final List<Tile> pool;
     private final Rack rack;
+    private int score = 0;
     private int tilesPlaced = 0;
 
     public Player(String name) {
@@ -143,6 +144,16 @@ public class Player {
             playTurn(board, referee, scanner, isFirstMove);
         }
     }
+    
+    public int getScore() {
+        return score;
+    }
+
+    public void addScore(int s) {
+        score += s;
+    }
+    
+    
 
    
 }
