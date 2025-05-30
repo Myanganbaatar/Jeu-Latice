@@ -152,7 +152,13 @@ public class Player {
     public void addScore(int s) {
         score += s;
     }
-
+    
+    
+    public void displayStatus() {
+        System.out.println("\n🎲 Current player: " + name);
+        System.out.println("Current score: " + score);
+        System.out.println("Tiles placed: " + tilesPlaced);
+    }
 
     
     
