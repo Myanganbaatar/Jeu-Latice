@@ -51,23 +51,14 @@ public class Game {
         }
     }
 
-    public void displayPlayersRacks() {
-        for (Player player : players) {
-            player.displayRack();
-            System.out.println();
-        }
-    }
+    
 
     public List<Player> getPlayers() {
         return new ArrayList<>(players); // cette ligne est important pour protéger l'encapsulation de l'atribut players
     }
-    
-    private void selectRandomStartingPlayer() {
-        int randomIndex = new Random().nextInt(players.size());
-        currentPlayer = players.get(randomIndex);
-    }
+   
     public Player getCurrentPlayer() {
-        return currentPlayer;
+        return players.get(currentPlayerIndex);
     }
     
     
