@@ -3,6 +3,7 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -48,78 +49,33 @@ public class JavaFXApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // Initialiser le plateau et le jeu
-        Board board = new Board(9);
-        Game game = new Game();
-        game.initializeGame();
+    	initializeGameState();
 
-        // Sélection aléatoire du joueur courant
-        Player currentPlayer = game.getCurrentPlayer();
-        System.out.println("Starting player: " + currentPlayer.getName());
-
-        // Création des vues
-        BoardView boardView = new BoardView(board);
-        RackView rackView = new RackView(currentPlayer.getRack().getTiles());
-
-        // Action : poser une tuile sur une case du plateau
-        boardView.setOnTilePlace((row, col, targetCell) -> {
-            if (selectedTile != null && targetCell.getChildren().size() == 1) {
-                boolean isValid = referee.isPlacementValid(board, row, col, selectedTile, isFirstMove);
-                if (!isValid) {
-                    AlertInvalid.showInvalidMoveAlert(); // 🔄 Show alert from utility
-                    return;
-                }
-
-                String imageName = selectedTile.getShape().name().toLowerCase() + "_" +
-                                   selectedTile.getColor().getCode() + ".png";
-                var imageUrl = getClass().getResource("/" + imageName);
-                if (imageUrl != null) {
-                    ImageView tileView = new ImageView(imageUrl.toExternalForm());
-                    tileView.setFitWidth(70);
-                    tileView.setFitHeight(70);
-                    tileView.setPreserveRatio(true);
-                    targetCell.getChildren().add(tileView);
-                }
-
-                board.placeTile(row, col, selectedTile);
-
-                if (selectedTilePane != null) {
-                    selectedTilePane.setVisible(false);
-                }
-
-                selectedTile = null;
-                selectedTilePane = null;
-                isFirstMove = false;
-            }
-        });
-
-        // Action : sélectionner une tuile du rack
-        rackView.setOnTileSelect((tile, tilePane) -> {
-            selectedTile = tile;
-            selectedTilePane = tilePane;
-        });
-
-        // Affichage principal
-        Label playerLabel = new Label("Current player: " + currentPlayer.getName());
-        playerLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-
-        VBox root = new VBox(10, boardView.getGrid(), playerLabel, rackView.getBox());
+        VBox root = new VBox(5);
         root.setAlignment(Pos.CENTER);
-        Image bgImage = new Image(getClass().getResource("/background.png").toExternalForm());
-        
-        BackgroundImage backgroundImage = new BackgroundImage(
-        	    bgImage,
-        	    BackgroundRepeat.NO_REPEAT,
-        	    BackgroundRepeat.NO_REPEAT,
-        	    BackgroundPosition.CENTER,
-        	    new BackgroundSize(100, 100, true, true, true, true) 
-        	);
 
+        boardAndScoresBox = new HBox(20,
+                new VBox(scoreLabelP1, tilesPlacedP1),
+                boardView.getGrid(),
+                new VBox(scoreLabelP2, tilesPlacedP2)
+        );
+        boardAndScoresBox.setAlignment(Pos.CENTER);
+
+        root.getChildren().addAll(boardAndScoresBox, playerLabel, cycleLabel, rackAndButtonBox);
+
+        Image bgImage = new Image(getClass().getResource("/background.png").toExternalForm());
+        BackgroundImage backgroundImage = new BackgroundImage(
+                bgImage,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(800, 720, true, true, true, true)
+        );
         root.setBackground(new Background(backgroundImage));
 
-        Scene scene = new Scene(root, 800, 800);
+        Scene scene = new Scene(root, 1000, 800);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Latice - Version 5");
+        primaryStage.setTitle("Latice - Version 6");
         primaryStage.show();
     }
     
@@ -270,7 +226,56 @@ public class JavaFXApp extends Application {
         rackAndButtonBox.getChildren().set(0, rackView.getBox());
         boardAndScoresBox.getChildren().set(1, boardView.getGrid());
     }
+    
+    
+    private void initializeGameState() {
+        board = new Board(9);
+        game = new Game();
+        game.initializeGame();
+        players = game.getPlayers();
+        currentPlayerIndex = new Random().nextInt(players.size());
+        currentPlayer = players.get(currentPlayerIndex);
+        selectedTile = null;
+        selectedTilePane = null;
+        isFirstMove = true;
+        turns = 0;
+        cycles = 0;
 
+        boardView = new BoardView(board);
+        configureBoardView();
+
+        rackView = new RackView(currentPlayer.getRack().getTiles());
+        rackView.setOnTileSelect((tile, tilePane) -> {
+            selectedTile = tile;
+            selectedTilePane = tilePane;
+        });
+
+        scoreLabelP1 = new Label(players.get(0).getName() + " score: 0");
+        scoreLabelP1.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
+        scoreLabelP2 = new Label(players.get(1).getName() + " score: 0");
+        scoreLabelP2.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
+
+        tilesPlacedP1 = new Label(players.get(0).getName() + " tiles: 0");
+        tilesPlacedP2 = new Label(players.get(1).getName() + " tiles: 0");
+        tilesPlacedP1.setStyle("-fx-font-size: 14px;");
+        tilesPlacedP2.setStyle("-fx-font-size: 14px;");
+
+        playerLabel = new Label("Current player: " + currentPlayer.getName());
+        playerLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+        cycleLabel = new Label("Cycle: 0");
+        cycleLabel.setStyle("-fx-font-size: 14px;");
+
+        scoreLabel = new Label();
+        scoreLabel.setStyle("-fx-font-size: 14px;");
+        updateScoreLabels();
+
+        Button passTurnButton = new Button("Pass Turn");
+        passTurnButton.setOnAction(e -> switchPlayer());
+
+        rackAndButtonBox = new HBox(20, rackView.getBox(), passTurnButton);
+        rackAndButtonBox.setAlignment(Pos.CENTER);
+    }
 
     
 
