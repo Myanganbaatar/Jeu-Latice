@@ -2,6 +2,7 @@ package latice.application;
 
 import latice.Board.Board;
 import latice.model.Game;
+import latice.model.Player;
 
 public class LaticeConsoleApplication {
     public static void main(String[] args) {
@@ -15,9 +16,19 @@ public class LaticeConsoleApplication {
         game.displayPlayersRacks();
         
         
+        
+       System.out.println("=== JEU LATICE - VERSION 2 ===");
        Board board = new Board(9);
        board.displayBoard();
         
-        
+       System.out.println("=== JEU LATICE - VERSION 4 ===");
+       Player currentPlayer = game.getCurrentPlayer();
+       
+       board.displayBoard();
+       
+       System.out.println("Starting Player (choix aleatoire): " + currentPlayer.getName());
+       
+       
+       
     }
 }
