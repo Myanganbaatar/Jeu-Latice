@@ -110,6 +110,12 @@ public class Game {
             System.out.println("\n🏆 WINNER: " + winner.getName() + " 🏆");
         }
     }
+    
+    public boolean askReplay(Scanner scanner) {
+        System.out.print("\n🔁 Do you want to play again? (y/n): ");
+        String response = scanner.next();
+        return response.equalsIgnoreCase("y");
+    }
 
     
 }
