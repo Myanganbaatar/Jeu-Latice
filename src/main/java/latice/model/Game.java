@@ -19,8 +19,10 @@ public class Game {
     
 
     public Game() {
-        this.players = new ArrayList<>();
+    	this.players = new ArrayList<>();
         this.deck = new Deck();
+        this.board = new Board(9); // 9x9 board
+        this.referee = new Referee();
     }
 
     public void initializeGame() {
