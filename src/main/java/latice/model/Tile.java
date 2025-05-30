@@ -23,4 +23,8 @@ public class Tile {
     public Shape getShape() {
         return shape;
     }
+    
+    public String toColoredSymbol() {
+        return color.getAnsiCode() + shape.getSymbol() + ANSI_RESET;
+    }
 }

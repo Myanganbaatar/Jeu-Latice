@@ -1,5 +1,7 @@
 package latice.Board;
 
+import latice.model.Tile;
+
 public class Board {
     private final int size;
     private final BoardCase[][] grid;
@@ -39,41 +41,52 @@ public class Board {
 
 
     public void displayBoard() {
-        System.out.println("=== Plateau de jeu ===\n");
-
-        for (int j = 0; j < size; j++) {
-            System.out.print("----");
+        System.out.print("\n    ");
+        for (int j = 1; j <= size; j++) {
+            System.out.print(j + "   ");
         }
-        System.out.println("-");
+        System.out.println();
+        System.out.println("   " + "-".repeat(size * 4 + 1));
 
         for (int i = 0; i < size; i++) {
-            // Ligne de contenu
+            System.out.print((i + 1) + " |");
             for (int j = 0; j < size; j++) {
-                String content = switch (grid[i][j].getType()) {
-                    case NORMAL -> " ";
-                    case SUN -> "S";
-                    case MOON -> "M";
-                };
-                System.out.print("| " + content + " ");
+                if (hasTile(i, j)) {
+                    Tile t = getTile(i, j);
+                    System.out.print(t.toColoredSymbol() + " |");
+                } else {
+                    System.out.print("   |");
+                }
             }
-            System.out.println("|");
-
-            // Ligne de séparation
-            for (int j = 0; j < size; j++) {
-                System.out.print("----");
-            }
-            System.out.println("-");
+            System.out.println();
+            System.out.println("   " + "-".repeat(size * 4 + 1));
         }
     }
     
     public BoardCase getCase(int row, int col) {
-        return grid[row][col];
+        if (row >= 0 && row < size && col >= 0 && col < size) {
+            return grid[row][col];
+        }
+        throw new IndexOutOfBoundsException("Position out of board bounds");
     }
     
     
     public boolean isSunCase(int row, int col) {
         return getCase(row, col).getType() == CaseType.SUN;
     }
+    
+    private Tile[][] placedTiles = new Tile[9][9];
 
+    public boolean hasTile(int row, int col) {
+        return placedTiles[row][col] != null;
+    }
+
+    public Tile getTile(int row, int col) {
+        return placedTiles[row][col];
+    }
+    
+    public void placeTile(int row, int col, Tile tile) {
+        placedTiles[row][col] = tile;
+    }
 
 }

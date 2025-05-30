@@ -1,47 +1,49 @@
 package latice.model;
 
+import latice.Board.Board;
 import latice.model.Deck;
 import latice.model.Tile;
+import latice.rules.Referee;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Game {
-    private final List<Player> players;
-    private final Deck deck;
-    private Player currentPlayer;
+	private final List<Player> players;
+    public final Deck deck;
+    private int currentPlayerIndex = 0;
+    private final Board board;
+    private final Referee referee;
+    private boolean isFirstMove = true;
     
 
     public Game() {
-        this.players = new ArrayList<>();
+    	this.players = new ArrayList<>();
         this.deck = new Deck();
+        this.board = new Board(9); // 9x9 board
+        this.referee = new Referee();
     }
 
     public void initializeGame() {
         
-        players.add(new Player("Joueur 1"));
-        players.add(new Player("Joueur 2"));
+    	players.add(new Player("Player 1"));
+        players.add(new Player("Player 2"));
 
-        
         deck.shuffle();
-
-        
         distributeTiles();
 
-        
         for (Player player : players) {
             player.initializeRack();
         }
-        
-        selectRandomStartingPlayer();
+
+        currentPlayerIndex = new Random().nextInt(players.size());
     }
 
     private void distributeTiles() {
-        int totalTiles = deck.getTotalTiles();
-        int tilesPerPlayer = totalTiles / players.size();
-
         for (Player player : players) {
-            for (int i = 0; i < tilesPerPlayer; i++) {
+            for (int i = 0; i < 5; i++) {
                 Tile tile = deck.drawTile();
                 if (tile != null) {
                     player.addToPool(tile);
@@ -50,24 +52,50 @@ public class Game {
         }
     }
 
-    public void displayPlayersRacks() {
-        for (Player player : players) {
-            player.displayRack();
-            System.out.println();
-        }
-    }
+    
 
     public List<Player> getPlayers() {
         return new ArrayList<>(players); // cette ligne est important pour protéger l'encapsulation de l'atribut players
     }
-    
-    private void selectRandomStartingPlayer() {
-        int randomIndex = new Random().nextInt(players.size());
-        currentPlayer = players.get(randomIndex);
-    }
+   
     public Player getCurrentPlayer() {
-        return currentPlayer;
+        return players.get(currentPlayerIndex);
     }
     
+    public void nextPlayer() {
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+    }
+    
+    public Tile drawTile() {
+        return deck.drawTile();
+    }
+    
+    public boolean isDeckEmpty() {
+        return deck.getTotalTiles() == 0;
+    }
+    
+    public void startGame() {
+        Scanner scanner = new Scanner(System.in);
+        Player currentPlayer = getCurrentPlayer();
+
+        System.out.println("\n👉 Premier coup : ligne 5, colonne 5 (centre de la lune)\n");
+
+        while (true) {
+            currentPlayer.playTurn(board, referee, scanner, isFirstMove);
+
+            if (isFirstMove) isFirstMove = false;
+
+            if (currentPlayer.getRack().getTiles().isEmpty()) {
+                System.out.println("Le rack du joueur " + currentPlayer.getName() + " est vide. Fin de partie !");
+                break;
+            }
+
+            nextPlayer();
+            currentPlayer = getCurrentPlayer();
+        }
+
+        scanner.close();
+    }
+
     
 }

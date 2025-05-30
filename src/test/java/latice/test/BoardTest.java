@@ -11,6 +11,9 @@ import org.junit.jupiter.api.Test;
 import latice.Board.Board;
 import latice.Board.BoardCase;
 import latice.Board.CaseType;
+import latice.model.Color;
+import latice.model.Shape;
+import latice.model.Tile;
 
 class BoardTest {
 	
@@ -51,30 +54,57 @@ class BoardTest {
 	}
 	
 	
+	@Test
+    void testPlaceTile_HasTileAndGetTile() {
+        Tile tile = new Tile(Color.RED, Shape.DOLPHIN);
+        int row = 2, col = 3;
+
+        assertFalse(board.hasTile(row, col));
+        assertNull(board.getTile(row, col));
+
+        board.placeTile(row, col, tile);
+
+        assertTrue(board.hasTile(row, col));
+        assertEquals(tile, board.getTile(row, col));
+    }
 	
-	 
-	 
-	 @Test
-	 void test_Display_Board_Output() {
-	     // Redirect System.out
-	     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-	     PrintStream originalOut = System.out;
-	     System.setOut(new PrintStream(outputStream));
-
-	     try {
-	         board.displayBoard(); // call the method
-	         String output = outputStream.toString();
-
-	         // Check for expected characters in output
-	         assertTrue(output.contains("S"), "Board display should contain 'S' for SUN");
-	         assertTrue(output.contains("M"), "Board display should contain 'M' for MOON");
-	         assertTrue(output.contains("|"), "Board should contain '|' for grid formatting");
-	         assertTrue(output.contains("----"), "Board should contain horizontal separators");
-
-	     } finally {
-	         // Restore original System.out
-	         System.setOut(originalOut);
-	     }
-	 }
+	@Test
+    void testDisplayBoard_DoesNotThrow() {
+        
+        board.displayBoard();
+    }
 	
+	@Test
+	public void testDisplayBoardWithTiles() {
+        
+        Tile tile = new Tile(Color.RED, Shape.DOLPHIN);
+        board.placeTile(0, 0, tile);
+
+        
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        System.setOut(new PrintStream(outContent));
+
+        try {
+            board.displayBoard();
+            String output = outContent.toString();
+
+            
+            assertTrue(output.contains(tile.toColoredSymbol()), "Output should contain tile's colored symbol");
+        } finally {
+           
+            System.setOut(originalOut);
+        }
+        
+	}
+	
+	@Test
+    void testGetCase_InvalidCoordinates_Throws() {
+        assertThrows(IndexOutOfBoundsException.class, () -> board.getCase(-1, 0));
+        assertThrows(IndexOutOfBoundsException.class, () -> board.getCase(0, 9));
+        assertThrows(IndexOutOfBoundsException.class, () -> board.getCase(9, 9));
+    }
+
+	 
+		
 }
