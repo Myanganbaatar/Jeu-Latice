@@ -128,6 +128,60 @@ public class JavaFXApp extends Application {
         tilesPlacedP2.setText(players.get(1).getName() + " tiles: " + players.get(1).getTilesPlaced());
     }
 
+
+    private void configureBoardView() {
+        boardView.setOnTilePlace((row, col, targetCell) -> {
+            if (selectedTile != null && targetCell.getChildren().size() == 1) {
+                boolean isValid = referee.isPlacementValid(board, row, col, selectedTile, isFirstMove);
+                if (!isValid) {
+                    AlertInvalid.showInvalidMoveAlert();
+                    return;
+                }
+
+                String imageName = selectedTile.getShape().name().toLowerCase() + "_" +
+                        selectedTile.getColor().getCode() + ".png";
+                var imageUrl = getClass().getResource("/" + imageName);
+                if (imageUrl != null) {
+                    ImageView tileView = new ImageView(imageUrl.toExternalForm());
+                    tileView.setFitWidth(60);
+                    tileView.setFitHeight(60);
+                    tileView.setPreserveRatio(true);
+                    targetCell.getChildren().add(tileView);
+                }
+
+                board.placeTile(row, col, selectedTile);
+                currentPlayer.incrementTilesPlaced();
+                currentPlayer.getRack().removeTile(selectedTile);
+
+                Tile newTile = game.drawTile();
+                if (newTile != null) {
+                    currentPlayer.getRack().addTile(newTile);
+                }
+
+                int points = referee.calculateScore(board, row, col, selectedTile);
+                currentPlayer.addScore(points);
+                updateScoreLabels();
+
+                if (referee.isGameOver(board, players)) {
+                    showEndOfGame();
+                }
+
+                if (selectedTilePane != null) {
+                    selectedTilePane.setVisible(false);
+                }
+                selectedTile = null;
+                selectedTilePane = null;
+                isFirstMove = false;
+
+                switchPlayer();
+            }
+        });
+    }
+    
+    
+
+    
+
     public static void main(String[] args) {
         launch(args);
     }
