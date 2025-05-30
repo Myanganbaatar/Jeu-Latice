@@ -68,6 +68,8 @@ public class Player {
             rack.addTile(pool.remove(0));
         }
     }
+    
+    
     protected Tile chooseTile(Scanner scanner) {
         int tileIndex = -1;
         List<Tile> tiles = rack.getTiles();
@@ -89,6 +91,26 @@ public class Player {
         return tiles.get(tileIndex);
     }
     
+    
+    protected int askCoordinate(Scanner scanner, String label, int max) {
+        int coord = -1;
+
+        while (true) {
+            System.out.print("Entrez la " + label + " (1-" + max + ") : ");
+            try {
+                coord = scanner.nextInt() - 1;
+                if (coord < 0 || coord >= max) {
+                    System.out.println("⛔ " + label + " invalide. Veuillez réessayer !");
+                } else {
+                    break; // valeur correcte
+                }
+            } catch (java.util.InputMismatchException e) {
+                System.out.println("⛔ Entrée invalide, veuillez entrer un nombre.");
+                scanner.nextLine(); // consommer la ligne incorrecte
+            }
+        }
+        return coord;
+    }
     
    
 }
