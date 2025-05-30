@@ -74,7 +74,7 @@ public class Player {
     }
     
     
-    protected Tile chooseTile(Scanner scanner) {
+    public Tile chooseTile(Scanner scanner) {
         int tileIndex = -1;
         List<Tile> tiles = rack.getTiles();
 
@@ -96,7 +96,7 @@ public class Player {
     }
     
     
-    protected int askCoordinate(Scanner scanner, String label, int max) {
+    public int askCoordinate(Scanner scanner, String label, int max) {
         int coord = -1;
 
         while (true) {
@@ -186,6 +186,8 @@ public class Player {
         System.out.println("Current score: " + score);
         System.out.println("Tiles placed: " + tilesPlaced);
     }
+    
+    
 
     
     
