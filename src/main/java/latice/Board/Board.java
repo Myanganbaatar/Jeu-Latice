@@ -1,5 +1,7 @@
 package latice.Board;
 
+import latice.model.Tile;
+
 public class Board {
     private final int size;
     private final BoardCase[][] grid;
@@ -76,6 +78,12 @@ public class Board {
     
     public boolean isSunCase(int row, int col) {
         return getCase(row, col).getType() == CaseType.SUN;
+    }
+    
+    private Tile[][] placedTiles = new Tile[9][9];
+
+    public boolean hasTile(int row, int col) {
+        return placedTiles[row][col] != null;
     }
 
 
