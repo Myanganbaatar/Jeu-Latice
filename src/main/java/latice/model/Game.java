@@ -61,5 +61,8 @@ public class Game {
         return players.get(currentPlayerIndex);
     }
     
+    public void nextPlayer() {
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+    }
     
 }
