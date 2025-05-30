@@ -25,6 +25,25 @@ public class JavaFXApp extends Application {
     private boolean isFirstMove = true;
     private Referee referee = new Referee();
 
+    private Player currentPlayer;
+    private int currentPlayerIndex = 0;
+    private List<Player> players;
+    private Label playerLabel;
+    private Label scoreLabelP1;
+    private Label scoreLabelP2;
+    private Label tilesPlacedP1;
+    private Label tilesPlacedP2;
+    private Label scoreLabel;
+    private RackView rackView;
+    private BoardView boardView;
+    private Board board;
+    private Game game;
+    private int cycles = 0;
+    private Label cycleLabel;
+    private HBox rackAndButtonBox;
+    private int turns = 0;
+    private HBox boardAndScoresBox;
+
     @Override
     public void start(Stage primaryStage) {
         // Initialiser le plateau et le jeu
@@ -100,6 +119,13 @@ public class JavaFXApp extends Application {
         primaryStage.setScene(scene);
         primaryStage.setTitle("Latice - Version 5");
         primaryStage.show();
+    }
+    
+    private void updateScoreLabels() {
+        scoreLabelP1.setText(players.get(0).getName() + ": " + players.get(0).getScore());
+        scoreLabelP2.setText(players.get(1).getName() + ": " + players.get(1).getScore());
+        tilesPlacedP1.setText(players.get(0).getName() + " tiles: " + players.get(0).getTilesPlaced());
+        tilesPlacedP2.setText(players.get(1).getName() + " tiles: " + players.get(1).getTilesPlaced());
     }
 
     public static void main(String[] args) {
