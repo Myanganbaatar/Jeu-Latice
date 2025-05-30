@@ -178,7 +178,30 @@ public class JavaFXApp extends Application {
         });
     }
     
-    
+    private void switchPlayer() {
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        currentPlayer = players.get(currentPlayerIndex);
+
+        turns++;
+        if (turns % 2 == 0) {
+            cycles++;
+            cycleLabel.setText("Cycle: " + cycles);
+            if (cycles >= 10) {
+                showEndOfGame();
+            }
+        }
+
+        rackView = new RackView(currentPlayer.getRack().getTiles());
+        rackView.setOnTileSelect((tile, tilePane) -> {
+            selectedTile = tile;
+            selectedTilePane = tilePane;
+        });
+
+        playerLabel.setText("Current player: " + currentPlayer.getName());
+        updateScoreLabels();
+
+        rackAndButtonBox.getChildren().set(0, rackView.getBox());
+    }
 
     
 
