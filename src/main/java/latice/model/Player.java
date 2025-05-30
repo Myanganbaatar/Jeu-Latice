@@ -57,4 +57,9 @@ public class Player {
     public void setTilesPlaced(int tilesPlaced) {
         this.tilesPlaced = tilesPlaced;
     }
+    
+    public void incrementTilesPlaced() {
+        tilesPlaced++;
+    }
+
 }
