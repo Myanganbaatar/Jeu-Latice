@@ -8,6 +8,7 @@ import latice.rules.Referee;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Game {
 	private final List<Player> players;
@@ -71,6 +72,29 @@ public class Game {
     
     public boolean isDeckEmpty() {
         return deck.getTotalTiles() == 0;
+    }
+    
+    public void startGame() {
+        Scanner scanner = new Scanner(System.in);
+        Player currentPlayer = getCurrentPlayer();
+
+        System.out.println("\n👉 Premier coup : ligne 5, colonne 5 (centre de la lune)\n");
+
+        while (true) {
+            currentPlayer.playTurn(board, referee, scanner, isFirstMove);
+
+            if (isFirstMove) isFirstMove = false;
+
+            if (currentPlayer.getRack().getTiles().isEmpty()) {
+                System.out.println("Le rack du joueur " + currentPlayer.getName() + " est vide. Fin de partie !");
+                break;
+            }
+
+            nextPlayer();
+            currentPlayer = getCurrentPlayer();
+        }
+
+        scanner.close();
     }
 
     
