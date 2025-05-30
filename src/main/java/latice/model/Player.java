@@ -9,6 +9,7 @@ public class Player {
     private final String name;
     private final List<Tile> pool;
     private final Rack rack;
+    private int tilesPlaced = 0;
 
     public Player(String name) {
         this.name = name;
@@ -47,5 +48,13 @@ public class Player {
 
     public boolean hasTilesInPool() {
         return !pool.isEmpty();
+    }
+    
+    public int getTilesPlaced() {
+        return tilesPlaced;
+    }
+    
+    public void setTilesPlaced(int tilesPlaced) {
+        this.tilesPlaced = tilesPlaced;
     }
 }
