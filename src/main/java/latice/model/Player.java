@@ -61,5 +61,11 @@ public class Player {
     public void incrementTilesPlaced() {
         tilesPlaced++;
     }
+    
+    public void fillRackFromPool() {
+        while (!rack.isFull() && !pool.isEmpty()) {
+            rack.addTile(pool.remove(0));
+        }
+    }
 
 }
