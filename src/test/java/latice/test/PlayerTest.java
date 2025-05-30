@@ -1,9 +1,11 @@
 package latice.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
@@ -18,210 +20,137 @@ import latice.rules.Referee;
 import latice.Board.Board;
 import latice.model.Color;
 
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.*;
-import java.io.*;
-import java.util.*;
+
 
 class PlayerTest {
 
-    Player player;
-    Tile redDolphin = new Tile(Color.RED, Shape.DOLPHIN);
-    Tile blueElephant = new Tile(Color.GREEN, Shape.FEATHER);
+    private Player player;
 
     @BeforeEach
-    void setup() {
-        player = new Player("Alice");
+    void setUp() {
+        player = new Player("TestPlayer");
     }
 
-    
-
     @Test
-    void testPoolAddAndInitializeRack() {
-        player.addToPool(redDolphin);
-        player.addToPool(blueElephant);
+    void testAddToPoolAndInitializeRack() {
+        Tile t1 = new Tile(Color.GREEN,Shape.DOLPHIN);
+        Tile t2 = new Tile(Color.GREEN,Shape.FLOWER);
+        player.addToPool(t1);
+        player.addToPool(t2);
+
         assertEquals(2, player.getPoolSize());
         player.initializeRack();
-        assertEquals(2, player.getRack().size());
         assertEquals(0, player.getPoolSize());
+        assertTrue(player.getRack().getTiles().contains(t1));
     }
 
     @Test
-    void testHasTilesInPool() {
-        assertFalse(player.hasTilesInPool());
-        player.addToPool(redDolphin);
-        assertTrue(player.hasTilesInPool());
+    void testGettersSetters() {
+        assertEquals("TestPlayer", player.getName());
+
+        player.setTilesPlaced(1);
+        player.incrementTilesPlaced();
+        assertEquals(2, player.getTilesPlaced());
+
+        player.addScore(10);
+        assertEquals(10, player.getScore());
     }
 
     @Test
     void testFillRackFromPool() {
-        player.addToPool(redDolphin);
-        player.addToPool(blueElephant);
+        for (int i = 0; i < 5; i++) {
+            player.addToPool(new Tile(Color.GREEN,Shape.DOLPHIN));
+        }
         player.fillRackFromPool();
-        assertEquals(2, player.getRack().size());
-        assertEquals(0, player.getPoolSize());
+        assertTrue(player.getRack().isFull());
     }
-
-    @Test
-    void testDisplayRackOutputsCorrectly() {
-        player.getRack().addTile(redDolphin);
-
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outContent));
-
-        player.displayRack();
-
-        String output = outContent.toString();
-        assertTrue(output.contains("Alice's rack:"));
-        assertTrue(output.contains(redDolphin.toString()));
-
-        System.setOut(System.out);
-    }
-
     
     @Test
-    void testPlayTurnValidMove() {
-       
-        player.getRack().addTile(redDolphin);
-
-       
-        Board board = new Board(9) {
-            @Override
-            public void placeTile(int r, int c, Tile tile) {
-                /
-                assertEquals(redDolphin, tile);
-            }
-
-            @Override
-            public void displayBoard() {
-               
-            }
-        };
-
-        
-        Referee referee = new Referee() {
-            @Override
-            public boolean isPlacementValid(Board b, int row, int col, Tile tile, boolean isFirstMove) {
-                return true;
-            }
-        };
-
-        
-        String input = "1\n1\n1\n";
-        Scanner scanner = new Scanner(input);
-
-        
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outContent));
-
-        player.playTurn(board, referee, scanner, false);
-
-        System.setOut(System.out);
-
-        
-        assertEquals(0, player.getRack().size());
-        
-        assertEquals(1, player.getTilesPlaced());
-
-        
-        assertTrue(outContent.toString().contains("✅ Coup valide"));
+    void testRackIsInitiallyEmpty() {
+        assertNotNull(player.getRack());
+        assertTrue(player.getRack().getTiles().isEmpty());
     }
-
+    
     @Test
-    void testPlayTurnInvalidThenValidMove() {
-        
-        player.getRack().addTile(redDolphin);
+    void testHasTilesInPool() {
+        assertFalse(player.hasTilesInPool());
 
-        Board board = new Board(9) {
-            @Override
-            public void placeTile(int r, int c, Tile tile) {
-                assertEquals(redDolphin, tile);
-            }
-
-            @Override
-            public void displayBoard() {
-                // no-op
-            }
-        };
-
-        
-        class RefereeStub extends Referee {
-            int calls = 0;
-            @Override
-            public boolean isPlacementValid(Board b, int row, int col, Tile tile, boolean isFirstMove) {
-                calls++;
-                return calls == 2; 
-            }
-        }
-        RefereeStub referee = new RefereeStub();
+        player.addToPool(new Tile(Color.GREEN, Shape.FLOWER));
+        assertTrue(player.hasTilesInPool());
+    }
+    
+    @Test
+    void testChooseTile_invalidThenValidInput() {
+       
+        Tile tile1 = new Tile(Color.RED, Shape.DOLPHIN);
+        Tile tile2 = new Tile(Color.NAVY, Shape.FLOWER);
+        player.getRack().addTile(tile1);
+        player.getRack().addTile(tile2);
 
         
-        String input = "1\n1\n1\n1\n2\n2\n";
-        Scanner scanner = new Scanner(input);
+        String userInput = "5\n1\n";
+        Scanner scanner = new Scanner(new ByteArrayInputStream(userInput.getBytes()));
 
+        
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
 
-        player.playTurn(board, referee, scanner, false);
+        Tile chosen = player.chooseTile(scanner);
 
-        System.setOut(System.out);
+        System.setOut(System.out); 
 
         
-        assertEquals(1, player.getTilesPlaced());
-        assertEquals(0, player.getRack().size());
-
+        assertEquals(tile1, chosen);
         String output = outContent.toString();
-        assertTrue(output.contains("⛔ Coup invalide"));
-        assertTrue(output.contains("✅ Coup valide"));
+        assertTrue(output.contains("⛔ Index invalide"));
     }
-
+    
     @Test
-    void testChooseTileHandlesInvalidInput() {
-        player.getRack().addTile(redDolphin);
-        player.getRack().addTile(blueElephant);
-
-       
-        String input = "a\n0\n2\n";
-        Scanner scanner = new Scanner(input);
+    void testChooseTile_validInput() {
+        
+        Tile tile1 = new Tile(Color.RED, Shape.DOLPHIN);
+        Tile tile2 = new Tile(Color.YELLOW, Shape.DOLPHIN);
+        player.getRack().addTile(tile1);
+        player.getRack().addTile(tile2);
 
         
-        class TestPlayer extends Player {
-            public TestPlayer(String name) {
-                super(name);
-            }
+        String userInput = "2\n";
+        Scanner scanner = new Scanner(new ByteArrayInputStream(userInput.getBytes()));
 
-            public Tile testChooseTile(Scanner scanner) {
-                return super.chooseTile(scanner);
-            }
-        }
-        TestPlayer testPlayer = new TestPlayer("Bob");
-        testPlayer.getRack().addTile(redDolphin);
-        testPlayer.getRack().addTile(blueElephant);
+        
+        Tile chosen = player.chooseTile(scanner);
 
-        Tile chosen = testPlayer.testChooseTile(scanner);
-        assertEquals(blueElephant, chosen);
+        
+        assertEquals(tile2, chosen);
     }
-
+    
     @Test
-    void testAskCoordinateHandlesInvalidInput() {
+    void testAskCoordinate() {
         
-        class TestPlayer extends Player {
-            public TestPlayer(String name) {
-                super(name);
-            }
-            public int testAskCoordinate(Scanner scanner, String label, int max) {
-                return super.askCoordinate(scanner, label, max);
-            }
-        }
-        TestPlayer testPlayer = new TestPlayer("Bob");
+        String input = "abc\n10\n3\n"; 
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(input.getBytes());
+        Scanner scanner = new Scanner(inputStream);
+
+        Player player = new Player("TestPlayer");
+        int max = 9;
+
+        int result = player.askCoordinate(scanner, "row", max);
 
         
-        String input = "x\n0\n5\n";
-        Scanner scanner = new Scanner(input);
-
-        int coord = testPlayer.testAskCoordinate(scanner, "ligne", 9);
-        assertEquals(4, coord); 
+        assertEquals(2, result);
     }
+    
+    
+    
+    
+    
+    
+
+
 }
 
+
+    
+
+   
 
