@@ -41,11 +41,8 @@ public class Game {
     }
 
     private void distributeTiles() {
-        int totalTiles = deck.getTotalTiles();
-        int tilesPerPlayer = totalTiles / players.size();
-
         for (Player player : players) {
-            for (int i = 0; i < tilesPerPlayer; i++) {
+            for (int i = 0; i < 5; i++) {
                 Tile tile = deck.drawTile();
                 if (tile != null) {
                     player.addToPool(tile);
