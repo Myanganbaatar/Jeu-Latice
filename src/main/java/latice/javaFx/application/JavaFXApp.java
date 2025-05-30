@@ -236,6 +236,40 @@ public class JavaFXApp extends Application {
             }
         });
     }
+    
+    private void restartGame() {
+        // Réinitialiser l'état
+        board = new Board(9);
+        game = new Game();
+        game.initializeGame();
+        players = game.getPlayers();
+        currentPlayerIndex = new Random().nextInt(players.size());
+        currentPlayer = players.get(currentPlayerIndex);
+        selectedTile = null;
+        selectedTilePane = null;
+        isFirstMove = true;
+        turns = 0;
+        cycles = 0;
+
+        // Réinitialiser la vue
+        boardView = new BoardView(board);
+        configureBoardView(); // ⚠️ Ajoute cette ligne pour remettre l'événement sur le board
+
+        rackView = new RackView(currentPlayer.getRack().getTiles());
+        rackView.setOnTileSelect((tile, tilePane) -> {
+            selectedTile = tile;
+            selectedTilePane = tilePane;
+        });
+
+        // Mettre à jour les labels et la vue
+        playerLabel.setText("Current player: " + currentPlayer.getName());
+        updateScoreLabels();
+        cycleLabel.setText("Cycle: 0");
+
+        // Réinitialiser la vue du rack et du plateau
+        rackAndButtonBox.getChildren().set(0, rackView.getBox());
+        boardAndScoresBox.getChildren().set(1, boardView.getGrid());
+    }
 
 
     
