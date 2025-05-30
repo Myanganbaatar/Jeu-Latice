@@ -1,15 +1,21 @@
 package latice.model;
 
+import latice.Board.Board;
 import latice.model.Deck;
 import latice.model.Tile;
+import latice.rules.Referee;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class Game {
-    private final List<Player> players;
-    private final Deck deck;
-    private Player currentPlayer;
+	private final List<Player> players;
+    public final Deck deck;
+    private int currentPlayerIndex = 0;
+    private final Board board;
+    private final Referee referee;
+    private boolean isFirstMove = true;
     
 
     public Game() {
@@ -19,21 +25,17 @@ public class Game {
 
     public void initializeGame() {
         
-        players.add(new Player("Joueur 1"));
-        players.add(new Player("Joueur 2"));
+    	players.add(new Player("Player 1"));
+        players.add(new Player("Player 2"));
 
-        
         deck.shuffle();
-
-        
         distributeTiles();
 
-        
         for (Player player : players) {
             player.initializeRack();
         }
-        
-        selectRandomStartingPlayer();
+
+        currentPlayerIndex = new Random().nextInt(players.size());
     }
 
     private void distributeTiles() {
