@@ -27,7 +27,7 @@ public class Rack {
 
     public void display() {
         if (tiles.isEmpty()) {
-            System.out.println("Le rack est vide");
+            System.out.println("The rack is empty");
             return;
         }
 
@@ -51,4 +51,13 @@ public class Rack {
     public List<Tile> getTiles() {
         return new ArrayList<>(tiles); 
     }
+    
+    public void removeTile(Tile tile) {
+        tiles.remove(tile);
+    }
+    
+    public void clear() {
+        tiles.clear();
+    }
+
 }
