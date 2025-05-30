@@ -2,6 +2,8 @@ package latice.javaFx.application;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -202,6 +204,39 @@ public class JavaFXApp extends Application {
 
         rackAndButtonBox.getChildren().set(0, rackView.getBox());
     }
+    
+    private void showEndOfGame() {
+        Player winner = referee.getWinner(players);
+
+        String finalMessage;
+        if (winner == null) {
+            finalMessage = "DRAW\nGAME OVER";
+        } else {
+            finalMessage = "WINNER: " + winner.getName() + "\nGAME OVER";
+        }
+
+        Label endLabel = new Label(finalMessage);
+        endLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: black;");
+        endLabel.setAlignment(Pos.CENTER);
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText(null);
+        alert.getDialogPane().setContent(endLabel);
+
+        ButtonType replayButton = new ButtonType("Replay");
+        ButtonType quitButton = new ButtonType("Quit");
+        alert.getButtonTypes().setAll(replayButton, quitButton);
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == replayButton) {
+                restartGame();
+            } else if (response == quitButton) {
+                Stage stage = (Stage) playerLabel.getScene().getWindow();
+                stage.close();
+            }
+        });
+    }
+
 
     
 
