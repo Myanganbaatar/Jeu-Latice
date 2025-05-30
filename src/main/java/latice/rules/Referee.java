@@ -1,5 +1,8 @@
 package latice.rules;
+import java.util.List;
+
 import latice.Board.Board;
+import latice.model.Player;
 import latice.model.Tile;
 
 public class Referee {
@@ -61,5 +64,9 @@ public class Referee {
         else if (matchingSides == 3) return 2; // 1 pierre = 2 points
         else if (matchingSides == 4) return 4; // 2 pierres = 4 points
         else return 0;
+    }
+    
+    public boolean isGameOver(Board board, List<Player> players) {
+        return players.stream().allMatch(p -> p.getRack().isEmpty());
     }
 }
