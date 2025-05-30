@@ -69,4 +69,29 @@ public class Referee {
     public boolean isGameOver(Board board, List<Player> players) {
         return players.stream().allMatch(p -> p.getRack().isEmpty());
     }
+    
+    public Player getWinner(List<Player> players) {
+        int maxTiles = -1;
+        Player winner = null;
+        boolean tie = false;
+
+        // Trouver le nombre maximum de tuiles posées
+        for (Player p : players) {
+            if (p.getTilesPlaced() > maxTiles) {
+                maxTiles = p.getTilesPlaced();
+                winner = p;
+                tie = false;
+            } else if (p.getTilesPlaced() == maxTiles) {
+                tie = true;
+            }
+        }
+
+        // S'il y a une égalité (match nul), retourner null
+        if (tie) {
+            return null;
+        }
+
+        // Sinon, renvoyer le gagnant
+        return winner;
+    }
 }
