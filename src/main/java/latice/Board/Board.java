@@ -67,7 +67,10 @@ public class Board {
     }
     
     public BoardCase getCase(int row, int col) {
-        return grid[row][col];
+        if (row >= 0 && row < size && col >= 0 && col < size) {
+            return grid[row][col];
+        }
+        throw new IndexOutOfBoundsException("Position out of board bounds");
     }
     
     
