@@ -12,7 +12,7 @@ public class Deck {
         initializeTiles();
     }
 
-    private void initializeTiles() {
+    public void initializeTiles() {
         for (Color color : Color.values()) {
             for (Shape shape : Shape.values()) {
                 tiles.add(new Tile(color, shape));

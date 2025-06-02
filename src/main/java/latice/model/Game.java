@@ -14,16 +14,13 @@ public class Game {
 	private final List<Player> players;
     public final Deck deck;
     private int currentPlayerIndex = 0;
-    private final Board board;
-    private final Referee referee;
-    private boolean isFirstMove = true;
+    
     
 
     public Game() {
     	this.players = new ArrayList<>();
         this.deck = new Deck();
-        this.board = new Board(9); // 9x9 board
-        this.referee = new Referee();
+        
     }
 
     public void initializeGame() {
