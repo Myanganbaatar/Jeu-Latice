@@ -28,7 +28,7 @@ public class RefereeTest {
     void setUp() {
         referee = new Referee();
         board = new Board(9);
-        tile = new Tile(Color.GREEN,Shape.BIRD);  // Adjust based on your Tile constructor
+        tile = new Tile(Color.GREEN,Shape.BIRD);  
     }
 
     @Test
@@ -40,7 +40,7 @@ public class RefereeTest {
 
     @Test
     void testPlacementOnOccupiedTile() {
-        board.placeTile(2, 2, tile);  // Assuming you have a placeTile method
+        board.placeTile(2, 2, tile);  
         assertFalse(referee.isPlacementValid(board, 2, 2, tile, false));
     }
 
@@ -76,35 +76,35 @@ public class RefereeTest {
     
     @Test
     void testCalculateScoreTwoMatchingSides() {
-        Tile matchingTile1 = new Tile(Color.GREEN, Shape.FEATHER);  // Color match
-        Tile matchingTile2 = new Tile(Color.RED, Shape.BIRD); // Shape match
+        Tile matchingTile1 = new Tile(Color.GREEN, Shape.FEATHER);  
+        Tile matchingTile2 = new Tile(Color.RED, Shape.BIRD); 
 
-        board.placeTile(3, 4, matchingTile1); // Above (4,4)
-        board.placeTile(5, 4, matchingTile2); // Below (4,4)
+        board.placeTile(3, 4, matchingTile1); 
+        board.placeTile(5, 4, matchingTile2); 
 
         int score = referee.calculateScore(board, 4, 4, tile);
-        assertEquals(1, score);  // 2 matching sides → 1 point
+        assertEquals(1, score);  
     }
     
     @Test
     void testCalculateScoreThreeMatchingSides() {
-        board.placeTile(3, 4, new Tile(Color.GREEN, Shape.FEATHER));    // Above
-        board.placeTile(5, 4, new Tile(Color.RED, Shape.BIRD));   // Below
-        board.placeTile(4, 3, new Tile(Color.GREEN, Shape.FLOWER));  // Left
+        board.placeTile(3, 4, new Tile(Color.GREEN, Shape.FEATHER));    
+        board.placeTile(5, 4, new Tile(Color.RED, Shape.BIRD));  
+        board.placeTile(4, 3, new Tile(Color.GREEN, Shape.FLOWER));  
 
         int score = referee.calculateScore(board, 4, 4, tile);
-        assertEquals(2, score);  // 3 matching sides → 2 points
+        assertEquals(2, score);  
     }
     
     @Test
     void testCalculateScoreFourMatchingSides() {
-        board.placeTile(3, 4, new Tile(Color.GREEN, Shape.FEATHER));    // Above
-        board.placeTile(5, 4, new Tile(Color.RED, Shape.BIRD));   // Below
-        board.placeTile(4, 3, new Tile(Color.GREEN, Shape.FLOWER));  // Left
-        board.placeTile(4, 5, new Tile(Color.NAVY, Shape.BIRD));  // Right
+        board.placeTile(3, 4, new Tile(Color.GREEN, Shape.FEATHER));    
+        board.placeTile(5, 4, new Tile(Color.RED, Shape.BIRD));   
+        board.placeTile(4, 3, new Tile(Color.GREEN, Shape.FLOWER));  
+        board.placeTile(4, 5, new Tile(Color.NAVY, Shape.BIRD));  
 
         int score = referee.calculateScore(board, 4, 4, tile);
-        assertEquals(4, score);  // 4 matching sides → 4 points
+        assertEquals(4, score); 
     }
     
     @Test
@@ -166,6 +166,70 @@ public class RefereeTest {
         assertNull(referee.getWinner(players));
     }
     
+    
+    @Test
+    void testPlacementRowTooLow() {
+        Tile tile = new Tile(Color.GREEN, Shape.BIRD);
+        assertFalse(referee.isPlacementValid(board, -1, 4, tile, false));  
+    }
+
+    @Test
+    void testPlacementRowTooHigh() {
+        Tile tile = new Tile(Color.GREEN, Shape.BIRD);
+        assertFalse(referee.isPlacementValid(board, 9, 4, tile, false));  
+    }
+
+    @Test
+    void testPlacementColTooLow() {
+        Tile tile = new Tile(Color.GREEN, Shape.BIRD);
+        assertFalse(referee.isPlacementValid(board, 4, -1, tile, false));
+    }
+
+    @Test
+    void testPlacementColTooHigh() {
+        Tile tile = new Tile(Color.GREEN, Shape.BIRD);
+        assertFalse(referee.isPlacementValid(board, 4, 9, tile, false));  
+    }
+    
+    
+    @Test
+    void testFirstMoveAtCenterIsValid() {
+        Tile tile = new Tile(Color.GREEN, Shape.BIRD);
+        assertTrue(referee.isPlacementValid(board, 4, 4, tile, true)); 
+    }
+
+    @Test
+    void testFirstMoveNotAtCenterIsInvalid() {
+        Tile tile = new Tile(Color.GREEN, Shape.BIRD);
+        assertFalse(referee.isPlacementValid(board, 4, 3, tile, true)); 
+    }
+    
+    
+    @Test
+    void testFirstMoveInvalidRow() {
+        Tile tile = new Tile(Color.GREEN, Shape.BIRD);
+        assertFalse(referee.isPlacementValid(board, 3, 4, tile, true)); 
+    }
+
+    
+    @Test
+    void testNoAdjacentTilesReturnsFalse() {
+        Tile tile = new Tile(Color.GREEN, Shape.BIRD);
+
+        
+        assertFalse(referee.isPlacementValid(board, 4, 4, tile, false));
+    }
+
+    @Test
+    void testHasAdjacentTileIsTrue() {
+        Tile tile = new Tile(Color.GREEN, Shape.BIRD);
+        
+        board.placeTile(3, 4, new Tile(Color.GREEN, Shape.DOLPHIN)); 
+
+
+        assertTrue(referee.isPlacementValid(board, 4, 4, tile, false));
+    }
+   
     
     
 }
