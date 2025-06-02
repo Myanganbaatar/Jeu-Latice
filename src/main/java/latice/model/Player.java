@@ -15,6 +15,7 @@ public class Player {
     private final Rack rack;
     private int score = 0;
     private int tilesPlaced = 0;
+    private int extraActions = 0;
 
     public Player(String name) {
         this.name = name;
@@ -193,6 +194,15 @@ public class Player {
             this.rack.exchangeAllTiles(deck);
         }
     }
+    
+    public int getExtraActions() {
+        return extraActions;
+    }
+    
+    public void addExtraAction() {
+        extraActions++;
+    }
+
     
 
     
