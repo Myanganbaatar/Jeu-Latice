@@ -285,6 +285,17 @@ public class JavaFXApp extends Application {
         alert.showAndWait();
     }
     
+    private void buyExtraAction() {
+        if (currentPlayer.spendPoints(2)) {
+            currentPlayer.addExtraAction();
+            updateScoreLabels();
+            showAlert("Action Purchased", "You can now play another tile!");
+        } else {
+            showAlert("Not Enough Points", "You need at least 2 points to buy an action.");
+            switchPlayer();
+        }
+    }
+    
     
 
     public static void main(String[] args) {
