@@ -11,111 +11,133 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import latice.Board.Board;
+import latice.model.Deck;
 import latice.model.Game;
 import latice.model.Player;
 import latice.model.Tile;
 import latice.rules.Referee;
 
-public class GameTest {
+class GameTest {
+    private Game game;
 
-    Game game;
-    Referee referee;
     @BeforeEach
     void setUp() {
         game = new Game();
         game.initializeGame();
-        referee = new Referee();
     }
 
     @Test
-    void testConstructorInitialState() {
-        assertNotNull(game.getPlayers());
-        assertEquals(0, game.getPlayers().size());
-        assertFalse(game.isDeckEmpty()); 
-    }
-
-    @Test
-    void testInitializeGameAddsPlayersAndDistributesTiles() {
-        game.initializeGame();
-        List<Player> players = game.getPlayers();
-        assertEquals(2, players.size());
-        for (Player p : players) {
-            assertFalse(p.getRack().getTiles().isEmpty()); 
-            assertTrue(p.getPoolSize() >= 0);
-        }
-    }
-
-    @Test
-    void testNextPlayerCycles() {
-        game.initializeGame();
-        Player first = game.getCurrentPlayer();
-        game.nextPlayer();
-        Player second = game.getCurrentPlayer();
-        assertNotEquals(first, second);
-
-        // cycle back
-        game.nextPlayer();
-        Player backToFirst = game.getCurrentPlayer();
-        assertEquals(first, backToFirst);
-    }
-
-    @Test
-    void testDrawTileDelegatesToDeck() {
-        Tile tile = game.drawTile();
-        assertNotNull(tile); 
-    }
-
-    @Test
-    void testIsDeckEmptyReflectsDeckState() {
-        assertFalse(game.isDeckEmpty());
-       
-    }
-    
-    @Test
-    void testAnnounceWinnerDetectsCorrectWinner() throws Exception {
-        List<Player> players = game.getPlayers();
-
+    void testInitializeGame() {
+        // Verify players were created
+        assertEquals(2, game.getPlayers().size());
+        assertEquals("Player 1", game.getPlayers().get(0).getName());
+        assertEquals("Player 2", game.getPlayers().get(1).getName());
         
-        Player player1 = players.get(0);
-        Player player2 = players.get(1);
-
-        player1.addScore(20);
-        player2.addScore(10);
-
-       
-        var method = Game.class.getDeclaredMethod("announceWinner", List.class, Referee.class);
-        method.setAccessible(true);
-
-        System.out.println("\n🔍 Testing announceWinner...");
-        method.invoke(game, players, referee);  
-
-        assertEquals(player1, referee.getWinner(players));
+        // Verify tiles were distributed
+        for (Player player : game.getPlayers()) {
+            assertEquals(5, player.getRack().size());
+        }
+        
+        // Verify current player is set
+        assertNotNull(game.getCurrentPlayer());
     }
-    
+
     @Test
-    void testAnnounceWinnerWithDraw() throws Exception {
+    void testGetPlayersReturnsCopy() {
         List<Player> players = game.getPlayers();
-
-        Player player1 = players.get(0);
-        Player player2 = players.get(1);
-
-        player1.addScore(15);
-        player2.addScore(15);
-
-        var method = Game.class.getDeclaredMethod("announceWinner", List.class, Referee.class);
-        method.setAccessible(true);
-
-        System.out.println("\n🔍 Testing announceWinner (draw)...");
-        method.invoke(game, players, referee);  // Should print DRAW
-
-        assertNull(referee.getWinner(players));
+        players.remove(0); // Modify the copy
+        
+        assertEquals(2, game.getPlayers().size()); // Original unchanged
     }
-    
+
     @Test
-    public void testAskReplayYes() {
-        Scanner scanner = new Scanner("y");
-        Game game = new Game();
-        assertTrue(game.askReplay(scanner));
+    void testNextPlayer() {
+        Player firstPlayer = game.getCurrentPlayer();
+        game.nextPlayer();
+        Player secondPlayer = game.getCurrentPlayer();
+        
+        assertNotEquals(firstPlayer, secondPlayer);
+        
+        game.nextPlayer();
+        assertEquals(firstPlayer, game.getCurrentPlayer()); // Should wrap around
     }
-  
+
+    @Test
+    void testDrawTile() {
+        int initialDeckSize = game.getDeck().getTotalTiles();
+        Tile tile = game.drawTile();
+        
+        assertNotNull(tile);
+        assertEquals(initialDeckSize - 1, game.getDeck().getTotalTiles());
+    }
+
+    @Test
+    void testIsDeckEmpty() {
+        // Empty the deck
+        while (!game.isDeckEmpty()) {
+            game.drawTile();
+        }
+        
+        assertTrue(game.isDeckEmpty());
+    }
+
+    @Test
+    void testExchangeCurrentPlayerRack() {
+        Player currentPlayer = game.getCurrentPlayer();
+        List<Tile> originalRack = currentPlayer.getRack().getTiles();
+        int initialDeckSize = game.getDeck().getTotalTiles();
+        
+        game.exchangeCurrentPlayerRack();
+        
+        // Verify rack has new tiles
+        assertNotEquals(originalRack, currentPlayer.getRack().getTiles());
+        // Verify deck size remains the same (exchange, not draw)
+        assertEquals(initialDeckSize, game.getDeck().getTotalTiles());
+    }
+
+    @Test
+    void testCanBuyExtraAction() {
+        Player player = game.getPlayers().get(0);
+        
+        // Initially shouldn't be able to buy
+        assertFalse(game.canBuyExtraAction(player));
+        
+        // Add enough points
+        player.addScore(2);
+        assertTrue(game.canBuyExtraAction(player));
+        
+        // Test with exact score
+        player.addScore(-1); // Now has 1 point
+        assertFalse(game.canBuyExtraAction(player));
+    }
+
+    @Test
+    void testBuyExtraAction() {
+        Player player = game.getPlayers().get(0);
+        player.addScore(3);
+        int initialScore = player.getScore();
+        int initialActions = player.getExtraActions();
+        
+        // Successful purchase
+        game.buyExtraAction(player);
+        assertEquals(initialScore - 2, player.getScore());
+        assertEquals(initialActions + 1, player.getExtraActions());
+        
+        // Failed purchase (not enough points)
+        initialScore = player.getScore();
+        initialActions = player.getExtraActions();
+        game.buyExtraAction(player); // Only 1 point left now
+        assertEquals(initialScore, player.getScore());
+        assertEquals(initialActions, player.getExtraActions());
+    }
+
+    @Test
+    void testGetDeck() {
+    	
+        Deck deck = game.getDeck();
+        assertNotNull(deck);
+        
+        // Verify it's the same deck instance
+        assertSame(deck, game.getDeck());
+    }
 }
