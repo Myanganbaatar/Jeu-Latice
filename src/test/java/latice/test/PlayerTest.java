@@ -149,6 +149,18 @@ class PlayerTest {
         player.exchangeRack(deck);
         assertEquals(5, player.getRack().size());
     }
+    
+    @Test
+    public void testSpendPoints() {
+        Player player = new Player("Test");
+        player.addScore(10);
+        
+        assertTrue(player.spendPoints(5));
+        assertEquals(5, player.getScore());
+        
+        assertFalse(player.spendPoints(10));
+        assertEquals(5, player.getScore());
+    }
 }
 
 
