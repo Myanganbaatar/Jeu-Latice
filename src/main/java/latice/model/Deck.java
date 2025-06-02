@@ -62,4 +62,8 @@ public class Deck {
         }
     }
 
+    public boolean isDeckEmpty() {
+        return tiles.isEmpty();
+    }
+
 }
