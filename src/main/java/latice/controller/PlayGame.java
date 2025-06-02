@@ -114,5 +114,31 @@ public class PlayGame {
     }
 	
 	
+	public  boolean askReplay(Scanner scanner) {
+        System.out.print("\n🔁 Do you want to play again? (y/n): ");
+        String response = scanner.next();
+        return response.equalsIgnoreCase("y");
+    }
+	
+	public boolean askToBuyExtraAction(Scanner scanner) {
+        System.out.print("❓ You have at least 2 points. Do you want to buy an extra action? (y/n): ");
+        String response = scanner.next();
+        return response.equalsIgnoreCase("y");
+    }
+	
+	public  void announceWinner(List<Player> players, Referee referee) {
+        System.out.println("\n=== Final result ===");
+        for (Player p : players) {
+            System.out.println(p.getName() + " - Score: " + p.getScore() + " - Tiles placed: " + p.getTilesPlaced());
+        }
+
+        Player winner = referee.getWinner(players);
+        if (winner == null) {
+            System.out.println("\nDRAW!");
+        } else {
+            System.out.println("\n🏆 WINNER: " + winner.getName() + " 🏆");
+        }
+    }
+	
 
 }
