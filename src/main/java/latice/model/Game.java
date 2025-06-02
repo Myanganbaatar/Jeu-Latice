@@ -131,6 +131,12 @@ public class Game {
         String response = scanner.next();
         return response.equalsIgnoreCase("y");
     }
+    
+    public void exchangeCurrentPlayerRack() {
+        Player currentPlayer = getCurrentPlayer();
+        currentPlayer.getRack().exchangeAllTiles(this.deck);
+        this.deck.shuffle();
+    }
 
     
 }
