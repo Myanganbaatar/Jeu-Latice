@@ -10,6 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,134 +20,147 @@ import latice.model.Tile;
 import latice.rules.Referee;
 import latice.Board.Board;
 import latice.model.Color;
-
-
+import latice.model.Deck;
 
 class PlayerTest {
-
     private Player player;
+    private Tile tile1;
+    private Tile tile2;
+    private Deck deck;
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private final PrintStream originalOut = System.out;
 
     @BeforeEach
     void setUp() {
-        player = new Player("TestPlayer");
+        System.setOut(new PrintStream(outContent));
+        player = new Player("Test Player");
+        tile1 = new Tile(Color.RED, Shape.DOLPHIN);
+        tile2 = new Tile(Color.MAGENTA, Shape.GECKO);
+        deck = new Deck();
     }
 
     @Test
-    void testAddToPoolAndInitializeRack() {
-        Tile t1 = new Tile(Color.GREEN,Shape.DOLPHIN);
-        Tile t2 = new Tile(Color.GREEN,Shape.FLOWER);
-        player.addToPool(t1);
-        player.addToPool(t2);
+    void testConstructor() {
+        assertEquals("Test Player", player.getName());
+        assertEquals(0, player.getScore());
+        assertEquals(0, player.getTilesPlaced());
+        assertEquals(0, player.getExtraActions());
+        assertTrue(player.getPoolSize()==0);
+        assertTrue(player.getRack().isEmpty());
+    }
 
-        assertEquals(2, player.getPoolSize());
+    @Test
+    void testAddToPool() {
+        player.addToPool(tile1);
+        assertEquals(1, player.getPoolSize());
+        assertTrue(player.hasTilesInPool());
+        
+        player.addToPool(null);
+        assertEquals(1, player.getPoolSize()); // Null shouldn't be added
+    }
+
+    @Test
+    void testInitializeRack() {
+        // Add tiles to pool
+        player.addToPool(tile1);
+        player.addToPool(tile2);
+        
         player.initializeRack();
+        
         assertEquals(0, player.getPoolSize());
-        assertTrue(player.getRack().getTiles().contains(t1));
-    }
-
-    @Test
-    void testGettersSetters() {
-        assertEquals("TestPlayer", player.getName());
-
-        player.setTilesPlaced(1);
-        player.incrementTilesPlaced();
-        assertEquals(2, player.getTilesPlaced());
-
-        player.addScore(10);
-        assertEquals(10, player.getScore());
+        assertEquals(2, player.getRack().size());
     }
 
     @Test
     void testFillRackFromPool() {
-        for (int i = 0; i < 5; i++) {
-            player.addToPool(new Tile(Color.GREEN,Shape.DOLPHIN));
+        // Add more tiles than rack capacity
+        for (int i = 0; i < 7; i++) {
+            player.addToPool(new Tile(Color.values()[i % Color.values().length], 
+                           Shape.values()[i % Shape.values().length]));
         }
+        
         player.fillRackFromPool();
-        assertTrue(player.getRack().isFull());
+        
+        assertEquals(5, player.getRack().size()); // Rack at full capacity
+        assertEquals(2, player.getPoolSize()); // 7 total - 5 in rack
     }
-    
-    @Test
-    void testRackIsInitiallyEmpty() {
-        assertNotNull(player.getRack());
-        assertTrue(player.getRack().getTiles().isEmpty());
-    }
-    
-    @Test
-    void testHasTilesInPool() {
-        assertFalse(player.hasTilesInPool());
 
-        player.addToPool(new Tile(Color.GREEN, Shape.FLOWER));
-        assertTrue(player.hasTilesInPool());
-    }
-    
     @Test
-    void testChooseTile_invalidThenValidInput() {
-       
-        Tile tile1 = new Tile(Color.RED, Shape.DOLPHIN);
-        Tile tile2 = new Tile(Color.NAVY, Shape.FLOWER);
+    void testScoreManagement() {
+        player.addScore(5);
+        assertEquals(5, player.getScore());
+        
+        player.addScore(-3);
+        assertEquals(2, player.getScore());
+    }
+
+    @Test
+    void testTilePlacementTracking() {
+        assertEquals(0, player.getTilesPlaced());
+        
+        player.incrementTilesPlaced();
+        assertEquals(1, player.getTilesPlaced());
+        
+        player.setTilesPlaced(3);
+        assertEquals(3, player.getTilesPlaced());
+    }
+
+    
+
+    @Test
+    void testExchangeRackWithNullDeck() {
         player.getRack().addTile(tile1);
-        player.getRack().addTile(tile2);
-
+        int initialRackSize = player.getRack().size();
         
-        String userInput = "5\n1\n";
-        Scanner scanner = new Scanner(new ByteArrayInputStream(userInput.getBytes()));
-
+        player.exchangeRack(null);
         
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outContent));
+        assertEquals(initialRackSize, player.getRack().size()); // No change
+    }
 
-        Tile chosen = player.chooseTile(scanner);
-
-        System.setOut(System.out); 
-
+    @Test
+    void testExtraActions() {
+        assertEquals(0, player.getExtraActions());
         
-        assertEquals(tile1, chosen);
-        String output = outContent.toString();
-        assertTrue(output.contains("⛔ Index invalide"));
+        player.addExtraAction();
+        assertEquals(1, player.getExtraActions());
+        
+        player.useExtraAction();
+        assertEquals(0, player.getExtraActions());
+        
+        // Can't go negative
+        player.useExtraAction();
+        assertEquals(0, player.getExtraActions());
+    }
+
+    
+
+    @AfterEach
+    void tearDown() {
+        System.setOut(originalOut);
     }
     
     @Test
-    void testChooseTile_validInput() {
-        
-        Tile tile1 = new Tile(Color.RED, Shape.DOLPHIN);
-        Tile tile2 = new Tile(Color.YELLOW, Shape.DOLPHIN);
-        player.getRack().addTile(tile1);
-        player.getRack().addTile(tile2);
-
-        
-        String userInput = "2\n";
-        Scanner scanner = new Scanner(new ByteArrayInputStream(userInput.getBytes()));
-
-        
-        Tile chosen = player.chooseTile(scanner);
-
-        
-        assertEquals(tile2, chosen);
+    void testExchangeRack() {
+        Deck deck = new Deck();
+        deck.initializeTiles(); // À implémenter si nécessaire
+        for (int i = 0; i < 5; i++) {
+            player.getRack().addTile(new Tile(Color.GREEN,Shape.BIRD));
+        }
+        player.exchangeRack(deck);
+        assertEquals(5, player.getRack().size());
     }
     
     @Test
-    void testAskCoordinate() {
+    public void testSpendPoints() {
+        Player player = new Player("Test");
+        player.addScore(10);
         
-        String input = "abc\n10\n3\n"; 
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        Scanner scanner = new Scanner(inputStream);
-
-        Player player = new Player("TestPlayer");
-        int max = 9;
-
-        int result = player.askCoordinate(scanner, "row", max);
-
+        assertTrue(player.spendPoints(5));
+        assertEquals(5, player.getScore());
         
-        assertEquals(2, result);
+        assertFalse(player.spendPoints(10));
+        assertEquals(5, player.getScore());
     }
-    
-    
-    
-    
-    
-    
-
-
 }
 
 

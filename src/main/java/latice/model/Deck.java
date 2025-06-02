@@ -12,7 +12,7 @@ public class Deck {
         initializeTiles();
     }
 
-    private void initializeTiles() {
+    public void initializeTiles() {
         for (Color color : Color.values()) {
             for (Shape shape : Shape.values()) {
                 tiles.add(new Tile(color, shape));
@@ -54,6 +54,16 @@ public class Deck {
 
     public List<Tile> getAllTiles() {
         return new ArrayList<>(tiles); 
+    }
+    
+    public void returnTile(Tile tile) {
+        if (tile != null) {
+            tiles.add(tile);
+        }
+    }
+
+    public boolean isDeckEmpty() {
+        return tiles.isEmpty();
     }
 
 }

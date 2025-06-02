@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Rack {
     private final List<Tile> tiles;
-    private final int capacity;
+    public final int capacity;
 
     public Rack(int capacity) {
         this.tiles = new ArrayList<>();
@@ -59,5 +59,22 @@ public class Rack {
     public void clear() {
         tiles.clear();
     }
-
+    
+    public void exchangeAllTiles(Deck deck) {
+        if (deck == null) return;
+        
+        List<Tile> currentTiles = new ArrayList<>(this.tiles);
+        this.tiles.clear();
+        
+        for (Tile tile : currentTiles) {
+            deck.returnTile(tile);
+        }
+        
+        for (int i = 0; i < this.capacity && !deck.isDeckEmpty(); i++) {
+            Tile newTile = deck.drawTile();
+            if (newTile != null) {
+                this.tiles.add(newTile);
+            }
+        }
+    }
 }

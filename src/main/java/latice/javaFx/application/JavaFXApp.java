@@ -20,6 +20,7 @@ import latice.model.Tile;
 import latice.rules.Referee;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 public class JavaFXApp extends Application {
@@ -49,7 +50,7 @@ public class JavaFXApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-    	initializeGameState();
+        initializeGameState();
 
         VBox root = new VBox(5);
         root.setAlignment(Pos.CENTER);
@@ -75,7 +76,7 @@ public class JavaFXApp extends Application {
 
         Scene scene = new Scene(root, 1000, 800);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Latice - Version 6");
+        primaryStage.setTitle("Latice - Version 7");
         primaryStage.show();
     }
     
@@ -131,7 +132,11 @@ public class JavaFXApp extends Application {
                 selectedTilePane = null;
                 isFirstMove = false;
 
-                switchPlayer();
+                if (currentPlayer.getScore() >= 2) {
+                    askToBuyExtraAction();
+                } else {
+                    switchPlayer();
+                }
             }
         });
     }
@@ -266,17 +271,69 @@ public class JavaFXApp extends Application {
         cycleLabel = new Label("Cycle: 0");
         cycleLabel.setStyle("-fx-font-size: 14px;");
 
-        scoreLabel = new Label();
-        scoreLabel.setStyle("-fx-font-size: 14px;");
-        updateScoreLabels();
-
         Button passTurnButton = new Button("Pass Turn");
         passTurnButton.setOnAction(e -> switchPlayer());
 
-        rackAndButtonBox = new HBox(20, rackView.getBox(), passTurnButton);
+        Button exchangeRackButton = new Button("Exchange Rack");
+        exchangeRackButton.setOnAction(e -> exchangeRack());
+
+        // Le bouton "Buy Action" supprimé ici :
+        rackAndButtonBox = new HBox(20, rackView.getBox(), passTurnButton, exchangeRackButton);
         rackAndButtonBox.setAlignment(Pos.CENTER);
     }
+    
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    
+    private void buyExtraAction() {
+        if (currentPlayer.spendPoints(2)) {
+            currentPlayer.addExtraAction();
+            updateScoreLabels();
+            showAlert("Action Purchased", "You can now play another tile!");
+        } else {
+            showAlert("Not Enough Points", "You need at least 2 points to buy an action.");
+            switchPlayer();
+        }
+    }
+    
+    private void askToBuyExtraAction() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Extra Action");
+        alert.setHeaderText("You have " + currentPlayer.getScore() + " points");
+        alert.setContentText("Do you want to spend 2 points for an extra action?");
 
+        ButtonType yesButton = new ButtonType("Yes");
+        ButtonType noButton = new ButtonType("No");
+
+        alert.getButtonTypes().setAll(yesButton, noButton);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == yesButton) {
+            buyExtraAction();
+        } else {
+            switchPlayer();
+        }
+    }
+    
+    private void refreshRackView() {
+        rackView = new RackView(currentPlayer.getRack().getTiles());
+        rackView.setOnTileSelect((tile, tilePane) -> {
+            selectedTile = tile;
+            selectedTilePane = tilePane;
+        });
+        rackAndButtonBox.getChildren().set(0, rackView.getBox());
+    }
+    
+    private void exchangeRack() {
+        currentPlayer.exchangeRack(game.getDeck());
+        refreshRackView();
+        switchPlayer();
+    }
     
 
     public static void main(String[] args) {
