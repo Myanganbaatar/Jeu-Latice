@@ -49,7 +49,7 @@ public class JavaFXApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-    	initializeGameState();
+        initializeGameState();
 
         VBox root = new VBox(5);
         root.setAlignment(Pos.CENTER);
@@ -75,7 +75,7 @@ public class JavaFXApp extends Application {
 
         Scene scene = new Scene(root, 1000, 800);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Latice - Version 6");
+        primaryStage.setTitle("Latice - Version 7");
         primaryStage.show();
     }
     
@@ -276,7 +276,15 @@ public class JavaFXApp extends Application {
         rackAndButtonBox = new HBox(20, rackView.getBox(), passTurnButton);
         rackAndButtonBox.setAlignment(Pos.CENTER);
     }
-
+    
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    
     
 
     public static void main(String[] args) {
