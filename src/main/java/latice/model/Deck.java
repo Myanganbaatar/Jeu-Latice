@@ -55,5 +55,11 @@ public class Deck {
     public List<Tile> getAllTiles() {
         return new ArrayList<>(tiles); 
     }
+    
+    public void returnTile(Tile tile) {
+        if (tile != null) {
+            tiles.add(tile);
+        }
+    }
 
 }
