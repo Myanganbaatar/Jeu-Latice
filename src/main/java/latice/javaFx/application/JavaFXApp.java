@@ -316,6 +316,15 @@ public class JavaFXApp extends Application {
         }
     }
     
+    private void refreshRackView() {
+        rackView = new RackView(currentPlayer.getRack().getTiles());
+        rackView.setOnTileSelect((tile, tilePane) -> {
+            selectedTile = tile;
+            selectedTilePane = tilePane;
+        });
+        rackAndButtonBox.getChildren().set(0, rackView.getBox());
+    }
+    
     
 
     public static void main(String[] args) {
