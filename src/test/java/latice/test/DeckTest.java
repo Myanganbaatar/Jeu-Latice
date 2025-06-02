@@ -1,6 +1,8 @@
 package latice.test;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -104,5 +106,36 @@ public class DeckTest {
 	    void restoreSystemOut() {
 	        System.setOut(originalOut);
 	    }
+	    
+	    
+	    
+	    @Test
+	    void testIsDeckEmpty() {
+	        assertFalse(deck.isDeckEmpty(), "Deck should not be empty on initialization");
+	        while (!deck.isDeckEmpty()) {
+	            deck.drawTile();
+	        }
+	        assertTrue(deck.isDeckEmpty(), "Deck should be empty after drawing all tiles");
+	    }
+	    
+	    
+	    @Test
+	    void testReturnTileIncreasesSize() {
+	        Tile tile = deck.drawTile();
+	        int sizeBeforeReturn = deck.getTotalTiles();
+	        deck.returnTile(tile);
+	        assertEquals(sizeBeforeReturn + 1, deck.getTotalTiles(), "Deck size should increase after returning a tile");
+	    }
+	    
+	    @Test
+	    public void testReturnNullTileDoesNothing() {
+	        int sizeBefore = deck.getTotalTiles();
+	        deck.returnTile(null);
+	        assertEquals(sizeBefore, deck.getTotalTiles(), "Deck size should not change when returning null tile");
+	    }
+	    
+	    
+
+	    
 }
 
