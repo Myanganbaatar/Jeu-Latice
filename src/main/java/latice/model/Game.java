@@ -137,6 +137,12 @@ public class Game {
         currentPlayer.getRack().exchangeAllTiles(this.deck);
         this.deck.shuffle();
     }
+    
+    public boolean canBuyExtraAction(Player player) {
+        return player.getScore() >= 2;
+    }
+    
+    
 
     
 }
