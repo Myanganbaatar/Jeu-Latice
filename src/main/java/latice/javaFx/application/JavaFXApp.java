@@ -325,6 +325,11 @@ public class JavaFXApp extends Application {
         rackAndButtonBox.getChildren().set(0, rackView.getBox());
     }
     
+    private void exchangeRack() {
+        currentPlayer.exchangeRack(game.getDeck());
+        refreshRackView();
+        switchPlayer();
+    }
     
 
     public static void main(String[] args) {
