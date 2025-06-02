@@ -20,6 +20,7 @@ import latice.model.Tile;
 import latice.rules.Referee;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 public class JavaFXApp extends Application {
@@ -292,6 +293,25 @@ public class JavaFXApp extends Application {
             showAlert("Action Purchased", "You can now play another tile!");
         } else {
             showAlert("Not Enough Points", "You need at least 2 points to buy an action.");
+            switchPlayer();
+        }
+    }
+    
+    private void askToBuyExtraAction() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Extra Action");
+        alert.setHeaderText("You have " + currentPlayer.getScore() + " points");
+        alert.setContentText("Do you want to spend 2 points for an extra action?");
+
+        ButtonType yesButton = new ButtonType("Yes");
+        ButtonType noButton = new ButtonType("No");
+
+        alert.getButtonTypes().setAll(yesButton, noButton);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == yesButton) {
+            buyExtraAction();
+        } else {
             switchPlayer();
         }
     }
