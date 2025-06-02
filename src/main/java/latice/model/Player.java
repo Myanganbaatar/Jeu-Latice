@@ -188,6 +188,12 @@ public class Player {
     }
     
     
+    public void exchangeRack(Deck deck) {
+        if (deck != null) {
+            this.rack.exchangeAllTiles(deck);
+        }
+    }
+    
 
     
     
