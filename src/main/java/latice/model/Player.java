@@ -84,7 +84,14 @@ public class Player {
     }
     
     
-   
+    public boolean spendPoints(int points) {
+        if (score >= points) {
+            score -= points;
+            return true;
+        }
+        return false;
+    }
+
     
     
     public void exchangeRack(Deck deck) {
