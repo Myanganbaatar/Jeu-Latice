@@ -142,7 +142,16 @@ public class Game {
         return player.getScore() >= 2;
     }
     
+    public void buyExtraAction(Player player) {
+        if (canBuyExtraAction(player)) {
+            player.addScore(-2);
+            player.addExtraAction();
+        }
+    }
     
+    public Deck getDeck() {
+        return this.deck;
+    }
 
     
 }
