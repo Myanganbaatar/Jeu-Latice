@@ -203,11 +203,9 @@ public class Player {
         extraActions++;
     }
 
-    
-
-    
-    
-    
-
-   
+    public void useExtraAction() {
+        if (extraActions > 0) {
+            extraActions--;
+        }
+    }   
 }
