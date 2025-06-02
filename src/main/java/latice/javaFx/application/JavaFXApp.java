@@ -132,7 +132,11 @@ public class JavaFXApp extends Application {
                 selectedTilePane = null;
                 isFirstMove = false;
 
-                switchPlayer();
+                if (currentPlayer.getScore() >= 2) {
+                    askToBuyExtraAction();
+                } else {
+                    switchPlayer();
+                }
             }
         });
     }
