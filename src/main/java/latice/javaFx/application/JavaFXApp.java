@@ -271,14 +271,14 @@ public class JavaFXApp extends Application {
         cycleLabel = new Label("Cycle: 0");
         cycleLabel.setStyle("-fx-font-size: 14px;");
 
-        scoreLabel = new Label();
-        scoreLabel.setStyle("-fx-font-size: 14px;");
-        updateScoreLabels();
-
         Button passTurnButton = new Button("Pass Turn");
         passTurnButton.setOnAction(e -> switchPlayer());
 
-        rackAndButtonBox = new HBox(20, rackView.getBox(), passTurnButton);
+        Button exchangeRackButton = new Button("Exchange Rack");
+        exchangeRackButton.setOnAction(e -> exchangeRack());
+
+        // Le bouton "Buy Action" supprimé ici :
+        rackAndButtonBox = new HBox(20, rackView.getBox(), passTurnButton, exchangeRackButton);
         rackAndButtonBox.setAlignment(Pos.CENTER);
     }
     
