@@ -2,6 +2,7 @@ package latice.rules;
 import java.util.List;
 
 import latice.Board.Board;
+import latice.Board.CaseType;
 import latice.model.Player;
 import latice.model.Tile;
 
@@ -55,7 +56,7 @@ public class Referee {
 	    return true;
 	}
     
-    public int calculateScore(Board board, int row, int col, Tile tile) {
+	public int calculateScore(Board board, int row, int col, Tile tile) {
         int matchingSides = 0;
         int[][] directions = {
             {-1, 0}, // haut
@@ -76,10 +77,17 @@ public class Referee {
             }
         }
 
-        if (matchingSides == 2) return 1;      // 1 demi-pierre = 1 point
-        else if (matchingSides == 3) return 2; // 1 pierre = 2 points
-        else if (matchingSides == 4) return 4; // 2 pierres = 4 points
-        else return 0;
+        int score = 0;
+        if (matchingSides == 2) score = 1;      // 1 demi-pierre = 1 point
+        else if (matchingSides == 3) score = 2; // 1 pierre = 2 points
+        else if (matchingSides == 4) score = 4; // 2 pierres = 4 points
+
+        // Bonus de 2 points pour les cases soleil
+        if (board.getCase(row, col).getType() == CaseType.SUN) {
+            score += 2; 
+        }
+
+        return score;
     }
     
     public boolean isGameOver(Board board, List<Player> players) {
