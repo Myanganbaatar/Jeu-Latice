@@ -92,5 +92,10 @@ public class Game {
         return this.deck;
     }
 
-    
+    public void displayPlayersRacks() {
+    	for(Player player: players) {
+    		player.displayRack();
+    		System.out.println();
+    	}
+    }
 }
