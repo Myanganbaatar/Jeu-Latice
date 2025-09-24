@@ -76,27 +76,36 @@ class BoardTest {
 	
 	@Test
 	public void testDisplayBoardWithTiles() {
-        
-        Tile tile = new Tile(Color.RED, Shape.DOLPHIN);
-        board.placeTile(0, 0, tile);
+	    // Crée une tuile rouge avec la forme DOLPHIN
+	    Tile tile = new Tile(Color.RED, Shape.DOLPHIN);
+	    
+	    // Place cette tuile à la position (0, 0) sur le plateau
+	    board.placeTile(0, 0, tile);
 
-        
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        PrintStream originalOut = System.out;
-        System.setOut(new PrintStream(outContent));
+	    // Prépare un flux mémoire pour capturer la sortie console
+	    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+	    
+	    // Sauvegarde la sortie standard originale (console)
+	    PrintStream originalOut = System.out;
+	    
+	    // Redirige la sortie standard vers le flux mémoire
+	    System.setOut(new PrintStream(outContent));
 
-        try {
-            board.displayBoard();
-            String output = outContent.toString();
-
-            
-            assertTrue(output.contains(tile.toColoredSymbol()), "Output should contain tile's colored symbol");
-        } finally {
-           
-            System.setOut(originalOut);
-        }
-        
+	    try {
+	        // Affiche le plateau (affichage capturé dans outContent)
+	        board.displayBoard();
+	        
+	        // Convertit la sortie capturée en chaîne de caractères
+	        String output = outContent.toString();
+	        
+	        // Vérifie que la sortie contient le symbole coloré de la tuile placée
+	        assertTrue(output.contains(tile.toColoredSymbol()), "Output should contain tile's colored symbol");
+	    } finally {
+	        // Restaure la sortie standard originale (console)
+	        System.setOut(originalOut);
+	    }
 	}
+
 	
 	@Test
     void testGetCase_InvalidCoordinates_Throws() {
