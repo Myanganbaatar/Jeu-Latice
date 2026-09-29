@@ -12,7 +12,7 @@ import java.util.List;
 public class RackView {
 
     private final HBox rackBox = new HBox(10);
-    private final int TILE_SIZE = 70;
+    private static final int TILE_SIZE = 70;
     private final List<StackPane> allTilePanes = new ArrayList<>();
 
     public interface TileSelectHandler {

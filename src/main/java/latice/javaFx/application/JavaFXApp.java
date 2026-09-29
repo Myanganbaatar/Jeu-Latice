@@ -8,7 +8,14 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import latice.Board.Board;
 import latice.javaFx.gameView.BoardView;
@@ -24,6 +31,7 @@ import java.util.Optional;
 import java.util.Random;
 
 public class JavaFXApp extends Application {
+    private static final Random RANDOM = new Random();
 	private Tile selectedTile;
     private StackPane selectedTilePane;
     private boolean isFirstMove = true;
@@ -37,7 +45,6 @@ public class JavaFXApp extends Application {
     private Label scoreLabelP2;
     private Label tilesPlacedP1;
     private Label tilesPlacedP2;
-    private Label scoreLabel;
     private RackView rackView;
     private BoardView boardView;
     private Board board;
@@ -204,7 +211,7 @@ public class JavaFXApp extends Application {
         game = new Game();
         game.initializeGame();
         players = game.getPlayers();
-        currentPlayerIndex = new Random().nextInt(players.size());
+        currentPlayerIndex = RANDOM.nextInt(players.size());
         currentPlayer = players.get(currentPlayerIndex);
         selectedTile = null;
         selectedTilePane = null;
@@ -238,7 +245,7 @@ public class JavaFXApp extends Application {
         game = new Game();
         game.initializeGame();
         players = game.getPlayers();
-        currentPlayerIndex = new Random().nextInt(players.size());
+        currentPlayerIndex = RANDOM.nextInt(players.size());
         currentPlayer = players.get(currentPlayerIndex);
         selectedTile = null;
         selectedTilePane = null;

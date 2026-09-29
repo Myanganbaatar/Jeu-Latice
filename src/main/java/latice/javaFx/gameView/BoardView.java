@@ -8,10 +8,10 @@ import javafx.scene.layout.StackPane;
 import latice.Board.Board;
 import latice.Board.CaseType;
 
-public class BoardView {
+public final class BoardView {
 
     private final GridPane grid = new GridPane();
-    private final int TILE_SIZE = 70;
+    private static final int TILE_SIZE = 70;
 
     public interface TilePlaceHandler {
         void onPlace(int row, int col, StackPane cell);

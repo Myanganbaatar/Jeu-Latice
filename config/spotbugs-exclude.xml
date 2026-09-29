@@ -5,4 +5,10 @@
     <Package name="~latice\.javaFx\..*"/>
     <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
   </Match>
+  <!-- Choix de conception : le controleur modifie directement le rack du joueur -->
+  <Match>
+    <Class name="latice.model.Player"/>
+    <Method name="getRack"/>
+    <Bug pattern="EI_EXPOSE_REP"/>
+  </Match>
 </FindBugsFilter>

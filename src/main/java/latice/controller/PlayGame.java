@@ -11,6 +11,7 @@ import latice.rules.Referee;
 import latice.util.InvalidInputException;
 
 public class PlayGame {
+    private static final Random RANDOM = new Random();
     public void playGame(Scanner scanner) {
         System.out.println("=== Latice Game - Version 7 (console) ===\n");
 
@@ -22,7 +23,7 @@ public class PlayGame {
         Board board = new Board(9);
         Referee referee = new Referee();
 
-        int currentPlayerIndex = new Random().nextInt(players.size());
+        int currentPlayerIndex = RANDOM.nextInt(players.size());
         Player currentPlayer = players.get(currentPlayerIndex);
 
         boolean isFirstMove = true;

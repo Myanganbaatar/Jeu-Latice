@@ -1,17 +1,15 @@
 package latice.application;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-import latice.Board.Board;
 import latice.controller.PlayGame;
-import latice.model.Game;
-import latice.model.Player;
 
 public class LaticeConsoleApplication {
 	 
 	
 	public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8);
         PlayGame game = new PlayGame();
 
         do {

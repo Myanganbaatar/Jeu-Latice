@@ -1,16 +1,12 @@
 package latice.model;
 
-import latice.Board.Board;
-import latice.model.Deck;
-import latice.model.Tile;
-import latice.rules.Referee;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
 
 public class Game {
+    private static final Random RANDOM = new Random();
 	private final List<Player> players;
     public final Deck deck;
     private int currentPlayerIndex = 0;
@@ -35,7 +31,7 @@ public class Game {
             player.initializeRack();
         }
 
-        currentPlayerIndex = new Random().nextInt(players.size());
+        currentPlayerIndex = RANDOM.nextInt(players.size());
     }
 
     private void distributeTiles() {
