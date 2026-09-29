@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -89,14 +90,14 @@ class BoardTest {
 	    PrintStream originalOut = System.out;
 	    
 	    // Redirige la sortie standard vers le flux mémoire
-	    System.setOut(new PrintStream(outContent));
+	    System.setOut(new PrintStream(outContent, true, StandardCharsets.UTF_8));
 
 	    try {
 	        // Affiche le plateau (affichage capturé dans outContent)
 	        board.displayBoard();
 	        
 	        // Convertit la sortie capturée en chaîne de caractères
-	        String output = outContent.toString();
+	        String output = outContent.toString(StandardCharsets.UTF_8);
 	        
 	        // Vérifie que la sortie contient le symbole coloré de la tuile placée
 	        assertTrue(output.contains(tile.toColoredSymbol()), "Output should contain tile's colored symbol");
