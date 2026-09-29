@@ -1,0 +1,34 @@
+name: CodeQL
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  schedule:
+    - cron: '0 6 * * 1'   # tous les lundis
+
+jobs:
+  analyze:
+    name: Analyse CodeQL (Java)
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: java-kotlin
+          queries: security-and-quality
+
+      - name: Build
+        run: ./mvnw -B -ntp -DskipTests compile
+
+      - uses: github/codeql-action/analyze@v3

@@ -77,3 +77,50 @@ jobs:
             target/checkstyle-result.xml
             target/pmd.xml
             target/spotbugsXml.xml
+
+  sonarcloud:
+    name: SonarCloud
+    needs: build-test
+    runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # historique complet pour la detection du nouveau code
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Pas de token
+        if: env.SONAR_TOKEN == ''
+        run: echo "::warning::Secret SONAR_TOKEN absent, analyse SonarCloud ignoree"
+
+      - name: Analyse SonarCloud
+        if: env.SONAR_TOKEN != ''
+        run: ./mvnw -B -ntp verify org.sonarsource.scanner.maven:sonar-maven-plugin:5.0.0.4389:sonar
+
+  package:
+    name: Livrable (jar)
+    needs: [ build-test, qualite ]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Packaging
+        run: ./mvnw -B -ntp -DskipTests package
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: latice-jar
+          path: target/latice-*.jar
