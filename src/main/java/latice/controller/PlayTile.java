@@ -54,7 +54,7 @@ public class PlayTile {
 	        }
 	    } catch (InvalidInputException e) {
 	        System.out.println("❌ Error: " + e.getMessage());
-	        scanner.nextLine(); // Clear invalid input
+	        // la ligne invalide est deja consommee par readIntWithException
 	        playTile(scanner, currentPlayer, board, referee, game, isFirstMove); // Retry
 	    }
 	}

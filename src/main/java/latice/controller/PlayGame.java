@@ -107,7 +107,7 @@ public class PlayGame {
 
             } catch (InvalidInputException e) {
                 System.out.println("⛔ Error: " + e.getMessage());
-                scanner.nextLine(); // Clear the invalid input
+                // ligne invalide deja consommee par readIntWithException
             }
         }
     }
